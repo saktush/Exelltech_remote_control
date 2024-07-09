@@ -14,7 +14,7 @@ level: float, -160 to 0, get only
 
 clas input_Channel(Channel)
 source type: str, "input" or "generator", set and get
-dante: true or false, get only - means that this channel is digital
+isdante: true or false, get only - means that this channel is digital
 sensitivity: int, can be 0 to 15, means sensitivity in dB from 0dB at 0 to 48dB at 15, set and get
 phantom power: true or false, set and get
 phase: true or false, set and get
