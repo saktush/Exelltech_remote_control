@@ -1,24 +1,29 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Tuple
 
 
 class Matrix(ABC):
     MIN_GAIN = -120
     MAX_GAIN = 0
 
-    def __init__(self, channels: int = 4) -> None:
-        if not isinstance(channels, int):
-            raise ValueError("Channels must be an integer.")
-        if not 1 <= channels <= 64:
-            raise ValueError("Channels can only be between 1 and 64.")
+    def __init__(self, input_channels: int, output_channels: int) -> None:
+        if not isinstance(input_channels, int) or not isinstance(output_channels, int):
+            raise ValueError("Input and Output channels must be integers.")
+        if not 1 <= input_channels <= 64 or not 1 <= output_channels <= 64:
+            raise ValueError("Input and Output channels can only be between 1 and 64.")
 
-        self._channels = channels
-        self._matrix_routes = [[False for _ in range(channels)] for _ in range(channels)]
-        self._matrix_gains = [[-120.0 for _ in range(channels)] for _ in range(channels)]
+        self._input_channels = input_channels
+        self._output_channels = output_channels
+        self._matrix_routes = [[False for _ in range(output_channels)] for _ in range(input_channels)]
+        self._matrix_gains = [[-120.0 for _ in range(output_channels)] for _ in range(input_channels)]
 
     @property
-    def channels(self) -> int:
-        return self._channels
+    def input_channels(self) -> int:
+        return self._input_channels
+
+    @property
+    def output_channels(self) -> int:
+        return self._output_channels
 
     @property
     def routes(self) -> List[List[bool]]:
@@ -28,8 +33,9 @@ class Matrix(ABC):
     def routes(self, value: List[List[bool]]) -> None:
         if not isinstance(value, list):
             raise ValueError("Matrix routes must be a list.")
-        if len(value) != self._channels or any(len(row) != self._channels for row in value):
-            raise ValueError(f"Invalid matrix routes. Must have {self._channels} rows and columns.")
+        if len(value) != self._input_channels or any(len(row) != self._output_channels for row in value):
+            raise ValueError(
+                f"Invalid matrix routes. Must have {self._input_channels} rows and {self._output_channels} columns.")
         self._matrix_routes = value
 
     @property
@@ -40,19 +46,20 @@ class Matrix(ABC):
     def gains(self, value: List[List[float]]) -> None:
         if not isinstance(value, list):
             raise ValueError("Matrix gains must be a list.")
-        if len(value) != self._channels or any(len(row) != self._channels for row in value):
-            raise ValueError(f"Invalid matrix gains. Must have {self._channels} rows and columns.")
+        if len(value) != self._input_channels or any(len(row) != self._output_channels for row in value):
+            raise ValueError(
+                f"Invalid matrix gains. Must have {self._input_channels} rows and {self._output_channels} columns.")
         for row in value:
             for gain in row:
-                if not -120 <= gain <= 0:
+                if not self.MIN_GAIN <= gain <= self.MAX_GAIN:
                     raise ValueError(f"Gains must be between {self.MIN_GAIN} and {self.MAX_GAIN} dB.")
         self._matrix_gains = value
 
     def set_route(self, row: int, col: int, value: bool) -> None:
         if not isinstance(row, int) or not isinstance(col, int):
             raise ValueError("Row and column indices must be integers.")
-        if not (0 <= row < self._channels) or not (0 <= col < self._channels):
-            raise ValueError(f"Row and column indices must be between 0 and {self._channels - 1}.")
+        if not (0 <= row < self._input_channels) or not (0 <= col < self._output_channels):
+            raise ValueError(f"Row and column indices must be between 0 and input/output channels.")
         if not isinstance(value, bool):
             raise ValueError("Route value must be a boolean.")
         self._matrix_routes[row][col] = value
@@ -60,15 +67,15 @@ class Matrix(ABC):
     def get_route(self, row: int, col: int) -> bool:
         if not isinstance(row, int) or not isinstance(col, int):
             raise ValueError("Row and column indices must be integers.")
-        if not (0 <= row < self._channels) or not (0 <= col < self._channels):
-            raise ValueError(f"Row and column indices must be between 0 and {self._channels - 1}.")
+        if not (0 <= row < self._input_channels) or not (0 <= col < self._output_channels):
+            raise ValueError(f"Row and column indices must be between 0 and input/output channels.")
         return self._matrix_routes[row][col]
 
     def set_gain(self, row: int, col: int, value: float) -> None:
         if not isinstance(row, int) or not isinstance(col, int):
             raise ValueError("Row and column indices must be integers.")
-        if not (0 <= row < self._channels) or not (0 <= col < self._channels):
-            raise ValueError(f"Row and column indices must be between 0 and {self._channels - 1}.")
+        if not (0 <= row < self._input_channels) or not (0 <= col < self._output_channels):
+            raise ValueError(f"Row and column indices must be between 0 and input/output channels.")
         if not (self.MIN_GAIN <= value <= self.MAX_GAIN):
             raise ValueError(f"Gain value must be between {self.MIN_GAIN} and {self.MAX_GAIN} dB.")
         self._matrix_gains[row][col] = value
@@ -76,16 +83,15 @@ class Matrix(ABC):
     def get_gain(self, row: int, col: int) -> float:
         if not isinstance(row, int) or not isinstance(col, int):
             raise ValueError("Row and column indices must be integers.")
-        if not (0 <= row < self._channels) or not (0 <= col < self._channels):
-            raise ValueError(f"Row and column indices must be between 0 and {self._channels - 1}.")
+        if not (0 <= row < self._input_channels) or not (0 <= col < self._output_channels):
+            raise ValueError(f"Row and column indices must be between 0 and input/output channels.")
         return self._matrix_gains[row][col]
 
     def __str__(self) -> str:
-
-        description = f"Matrix with {self._channels} channels:\n"
-        for i in range(self._channels):
-            line = f"[Channel {i + 1}] "
-            for j in range(self._channels):
+        description = f"Matrix with {self._input_channels} input channels and {self._output_channels} output channels:\n"
+        for i in range(self._input_channels):
+            line = f"[Input Channel {i + 1}] "
+            for j in range(self._output_channels):
                 route = "Route: True" if self._matrix_routes[i][j] else "Route: False"
                 gain = f"Gain: {-self._matrix_gains[i][j]} dB"
                 line += f"{route} {gain} | "

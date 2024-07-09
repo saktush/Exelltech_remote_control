@@ -1,14 +1,15 @@
 import unittest
-from models.matrix import Matrix
+from models.matrix import Matrix  # Ensure this path matches your actual file structure
 
 
 class TestMatrix(unittest.TestCase):
 
     def setUp(self):
-        self.matrix = Matrix(channels=4)
+        self.matrix = Matrix(input_channels=4, output_channels=4)
 
     def test_initialization(self):
-        self.assertEqual(self.matrix.channels, 4)
+        self.assertEqual(self.matrix.input_channels, 4)
+        self.assertEqual(self.matrix.output_channels, 4)
         self.assertEqual(len(self.matrix.routes), 4)
         self.assertEqual(len(self.matrix.gains), 4)
         self.assertTrue(all(len(row) == 4 for row in self.matrix.routes))
@@ -48,12 +49,15 @@ class TestMatrix(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.matrix.set_gain(row=0, col=0, value=10)  # Out of range gain
 
-    def test_channels_property(self):
-        self.assertEqual(self.matrix.channels, 4)
+    def test_input_channels_property(self):
+        self.assertEqual(self.matrix.input_channels, 4)
+
+    def test_output_channels_property(self):
+        self.assertEqual(self.matrix.output_channels, 4)
 
     def test_str_representation(self):
         result = str(self.matrix)
-        self.assertIn("Matrix with 4 channels", result)
+        self.assertIn("Matrix with 4 input channels and 4 output channels", result)
 
     def test_increase_all_gains(self):
         def increase_gains(matrix: Matrix, increment: float) -> None:

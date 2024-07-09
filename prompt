@@ -31,9 +31,10 @@ phase: true or false, set and get
 
 New abstract class Matrix in separate file:
 class Matrix(ABS)
-channels: int. get only
-routes: stored in list[list[bool, ...], ...] matrix with rows in range(channels) and cols in range channels, each value in matrix can be set and get
-gains: stored in list[list[-120 <= float <= 0, ...], ...]] matrix with rows in range channels and cols in range(channels_, each value in matrix can be set and get
+Input_channels: int, get only
+output_channels: int, get only
+routes: stored in list[list[bool, ...], ...] matrix with rows in range(input_channels) and cols in range output_channels, each value in matrix can be set and get
+gains: stored in list[list[-120 <= float <= 0, ...], ...]] matrix with rows in range(input_channels) and cols in range output_channels, each value in matrix can be set and get
 Matrix got rows and cols as many, as channels are
 please add __str__ method to this class with channels parameter only and class description
 Also don't forget to add separate getter and setter for individual matrix.routes and matrix.gains values matrix setter
