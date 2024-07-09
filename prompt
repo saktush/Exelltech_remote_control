@@ -1,8 +1,9 @@
-Initial:
+Initial prompts:
 
 Python
 Help me write a base abstract class called "channel"
 all its child should have following properties:
+
 
 class Channel(ABC)
 number: int, 0-63 means real channel number 1-64
@@ -11,6 +12,7 @@ mute: true of false, set and get
 gain: float from -72 to 12, set and get
 link: true or false, for even channel mean it is linked to number-1 channel. for idd channel means it is linked to number+1 channel
 level: float, -160 to 0, get only
+
 
 clas input_Channel(Channel)
 source type: str, "input" or "generator", set and get
@@ -23,5 +25,16 @@ phase: true or false, set and get
 New abstract class Matrix in separate file:
 class Matrix(ABS)
 channels: int. get only
-matrix: stored in list[list[dict["route":bool, "gain": -120 <= float <= 0], ...] matrix with rows in range channels and cols in range channels, each value in matrix can be set and get
+routes: stored in list[list[bool, ...], ...] matrix with rows in range(channels) and cols in range channels, each value in matrix can be set and get
+gains: stored in list[list[-120 <= float <= 0, ...], ...]] matrix with rows in range channels and cols in range(channels_, each value in matrix can be set and get
 Matrix got rows and cols as many, as channels are
+please add __str__ method to this class with channels parameter only and class description
+
+Also don't forget to add separate getter and setter for individual matrix.routes and matrix.gains values matrix setter
+it should work like this
+mtx = Matrix(4)
+mtx.routes.get(row=0, col=0,) # -> bool
+mtx.routes.set(row=0, col=0, value: bool = False)
+
+mtx gains.get(0, 0)  # -> -72 <= float <= 12
+mtx gains.set(row=0, col=0, value: -72 <= float <= 12)
