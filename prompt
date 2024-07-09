@@ -37,4 +37,6 @@ mtx.routes.get(row=0, col=0,) # -> bool
 mtx.routes.set(row=0, col=0, value: bool = False)
 
 mtx gains.get(0, 0)  # -> -72 <= float <= 12
-mtx gains.set(row=0, col=0, value: -72 <= float <= 12)
+mtx gains.set(row=0, col=0, value=0)
+
+Use unittest to test all Matrix methods, including the newly added
