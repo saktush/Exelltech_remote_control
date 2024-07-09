@@ -14,11 +14,18 @@ link: true or false, for even channel mean it is linked to number-1 channel. for
 level: float, -160 to 0, get only
 
 
-clas input_Channel(Channel)
+clas InputChannel(Channel)
 source type: str, "input" or "generator", set and get
 isdante: true or false, get only - means that this channel is digital
 sensitivity: int, can be 0 to 15, means sensitivity in dB from 0dB at 0 to 48dB at 15, set and get
 phantom power: true or false, set and get
+phase: true or false, set and get
+
+
+class OutputChannel(Channel)
+finish OutputChannel class using others as example
+it has:
+isdante: true or false, get only - means that this channel is digital
 phase: true or false, set and get
 
 
@@ -29,14 +36,15 @@ routes: stored in list[list[bool, ...], ...] matrix with rows in range(channels)
 gains: stored in list[list[-120 <= float <= 0, ...], ...]] matrix with rows in range channels and cols in range(channels_, each value in matrix can be set and get
 Matrix got rows and cols as many, as channels are
 please add __str__ method to this class with channels parameter only and class description
-
 Also don't forget to add separate getter and setter for individual matrix.routes and matrix.gains values matrix setter
 it should work like this
+```python
 mtx = Matrix(4)
 mtx.routes.get(row=0, col=0,) # -> bool
 mtx.routes.set(row=0, col=0, value: bool = False)
-
 mtx gains.get(0, 0)  # -> -72 <= float <= 12
 mtx gains.set(row=0, col=0, value=0)
+```
 
+matrix -tests:
 Use unittest to test all Matrix methods, including the newly added
