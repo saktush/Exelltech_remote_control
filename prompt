@@ -4,7 +4,7 @@ Python
 Help me write a base abstract class called "channel"
 all its child should have following properties:
 
-class Channel (abstract)
+class Channel(ABC)
 number: int, 0-63 means real channel number 1-64
 name: str, english ASCII only capital or lower symbols, digits ASCII special symols, 16 symbols  max len can be set and get
 mute: true of false, set and get
@@ -20,3 +20,8 @@ phantom power: true or false, set and get
 phase: true or false, set and get
 
 
+New abstract class Matrix in separate file:
+class Matrix(ABS)
+channels: int. get only
+matrix: stored in list[list[dict["route":bool, "gain": -120 <= float <= 0], ...] matrix with rows in range channels and cols in range channels, each value in matrix can be set and get
+Matrix got rows and cols as many, as channels are
