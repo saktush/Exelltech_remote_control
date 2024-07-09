@@ -48,11 +48,7 @@ class Matrix(ABC):
                     raise ValueError(f"Gains must be between {self.MIN_GAIN} and {self.MAX_GAIN} dB.")
         self._matrix_gains = value
 
-    def __str__(self, channels: int = None) -> str:
-        if not isinstance(channels, int):
-            raise ValueError("Channels must be an integer.")
-        if not 1 <= channels <= self._channels:
-            raise ValueError(f"Invalid channel {channels}. Must be between 1 and {self._channels}.")
+    def __str__(self) -> str:
 
         description = f"Matrix with {self._channels} channels:\n"
         for i in range(self._channels):
