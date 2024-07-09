@@ -3,13 +3,40 @@ from typing import Literal
 
 
 class Channel(ABC):
+    """
+    Abstract base class representing a channel in an audio system.
+
+    This class provides attributes and methods for working with channels, including their number, name,
+    mute status, gain level, linking state, and audio level. The properties can be accessed and set
+    using getter and setter methods.
+
+    Property:
+        number: Gets the channel's number.
+        name: Gets or sets the channel's name.
+        mute: Gets or sets whether the channel is muted.
+        gain: Gets or sets the channel's gain level.
+        link: Gets or sets whether the channel is linked to another channel.
+        level: Gets the channel's current audio level.
+
+    Notes:
+        The class provides a __str__ method for generating a human-readable string representation of
+        the channel. This can be useful for debugging and logging purposes.
+
+    Raises:
+        ValueError: If an invalid value is passed when setting the name, mute, gain, or link properties.
+    """
+    MIN_GAIN = -72
+    MAX_GAIN = 12
+    MIN_LEVEL = -160
+    MAX_LEVEL = 0
+
     def __init__(self) -> None:
         self._number = 0
         self._name = ''
         self._mute = False
         self._gain = 0.0
         self._link = False
-        self._level = -160.0
+        self._level: float = self.MIN_LEVEL
 
     @property
     def number(self) -> int:
@@ -48,8 +75,8 @@ class Channel(ABC):
     def gain(self, value: float) -> None:
         if not isinstance(value, float):
             raise ValueError("Gain must be a float.")
-        if not -72 <= value <= 12:
-            raise ValueError("Gain must be between -72 and 12.")
+        if not self.MIN_GAIN <= value <= self.MAX_GAIN:
+            raise ValueError(f"Gain must be between {self.MIN_GAIN} and {self.MAX_GAIN}.")
         self._gain = value
 
     @property
@@ -83,14 +110,14 @@ class InputChannel(Channel):
 
         self._number = number
         self._name = f'IN{number + 1}'
+        self._isdante: bool = is_dante
         self._mute = False
         self._phantom_power = False
         self._gain = 0.0
         self._link = False
-        self._level = -160.0
+        self._level = self.MIN_LEVEL
         self._sensitivity: int = 0
         self._source: Literal["input", "generator"] = "input"
-        self._isdante: bool = is_dante
         self._phase: bool = False
 
     @property
@@ -162,11 +189,11 @@ class OutputChannel(Channel):
 
         self._number = number
         self._name = f'OUT{number + 1}'
+        self._isdante: bool = is_dante
         self._mute = False
         self._gain = 0.0
         self._link = False
-        self._level = -160.0
-        self._isdante: bool = is_dante
+        self._level = self.MIN_LEVEL
         self._phase: bool = False
 
     @property
