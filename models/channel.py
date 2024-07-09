@@ -78,6 +78,8 @@ class InputChannel(Channel):
             raise ValueError("Number must be an integer.")
         if not 0 <= number <= 63:
             raise ValueError("Channel number must be between 0 and 64.")
+        if not isinstance(is_dante, bool):
+            raise ValueError("is_dante parameter must be a boolean")
 
         self._number = number
         self._name = f'IN{number + 1}'
@@ -146,3 +148,37 @@ class InputChannel(Channel):
         if not isinstance(value, bool):
             raise ValueError("Phase must be a boolean.")
         self._phase = value
+
+
+class OutputChannel(Channel):
+    def __init__(self, number: int, is_dante: bool = False, ) -> None:
+        super().__init__()
+        if not isinstance(number, int):
+            raise ValueError("Number must be an integer.")
+        if not 0 <= number <= 63:
+            raise ValueError("Channel number must be between 0 and 64.")
+        if not isinstance(is_dante, bool):
+            raise ValueError("is_dante parameter must be a boolean")
+
+        self._number = number
+        self._name = f'OUT{number + 1}'
+        self._mute = False
+        self._gain = 0.0
+        self._link = False
+        self._level = -160.0
+        self._isdante: bool = is_dante
+        self._phase: bool = False
+
+    @property
+    def phase(self) -> bool:
+        return self._phase
+
+    @phase.setter
+    def phase(self, value: bool) -> None:
+        if not isinstance(value, bool):
+            raise ValueError("Phase must be a boolean.")
+        self._phase = value
+
+    @property
+    def isdante(self) -> bool:
+        return self._isdante
