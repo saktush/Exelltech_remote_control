@@ -110,6 +110,39 @@ class ASCII:
             def levels(start: int, end: int) -> str:
                 return f"get:output#level#{start}-{end}"
 
+        class mixer:
+            @staticmethod
+            def switch(row: int, col: int) -> str:
+                return f"get:mixer#switch#{row}#{col}"
+
+            @staticmethod
+            def switch_vertical(row: int, col_range: tuple[int, int]) -> str:
+                if col_range[0] >= col_range[1]:
+                    raise ValueError("col_range Should have first int lower than second int")
+                return f"get:mixer#switch#{row}#{col_range[0]}-{col_range[1]}"
+
+            @staticmethod
+            def switch_horizontal(row_range: tuple[int, int], col: int) -> str:
+                if row_range[0] >= row_range[1]:
+                    raise ValueError("row_range Should have first int lower than second int")
+                return f"get:mixer#switch#{row_range[0]}-{row_range[1]}#{col}"
+
+            @staticmethod
+            def gain(row: int, col: int) -> str:
+                return f"get:mixer#gain#{row}#{col}"
+
+            @staticmethod
+            def gain_vertical(row: int, col_range: tuple[int, int]) -> str:
+                if col_range[0] >= col_range[1]:
+                    raise ValueError("col_range Should have first int lower than second int")
+                return f"get:mixer#gain#{row}#{col_range[0]}-{col_range[1]}"
+
+            @staticmethod
+            def gain_horizontal(row_range: tuple[int, int], col: int) -> str:
+                if row_range[0] >= row_range[1]:
+                    raise ValueError("row_range Should have first int lower than second int")
+                return f"get:mixer#gain#{row_range[0]}-{row_range[1]}#{col}"
+
     class set:
         class input:
             @staticmethod
@@ -254,3 +287,46 @@ class ASCII:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#link#{start}-{end}#{state}"
+
+        class mixer:
+            @staticmethod
+            def switch(row: int, col: int, state: Literal[0, 1]) -> str:
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:mixer#switch#{row}#{col}#{state}"
+
+            @staticmethod
+            def switch_vertical(row: int, col_range: tuple[int, int], state: Literal[0, 1]) -> str:
+                if col_range[0] >= col_range[1]:
+                    raise ValueError("col_range should have the first int lower than the second int")
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:mixer#switch#{row}#{col_range[0]}-{col_range[1]}#{state}"
+
+            @staticmethod
+            def switch_horizontal(row_range: tuple[int, int], col: int, state: Literal[0, 1]) -> str:
+                if row_range[0] >= row_range[1]:
+                    raise ValueError("row_range should have the first int lower than the second int")
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:mixer#switch#{row_range[0]}-{row_range[1]}#{col}#{state}"
+
+            @staticmethod
+            def gain(row: int, col: int, value: float) -> str:
+                value = round(value, 2)
+                return f"set:mixer#gain#{row}#{col}#{value}"
+
+            @staticmethod
+            def gain_vertical(row: int, col_range: tuple[int, int], value: float) -> str:
+                if col_range[0] >= col_range[1]:
+                    raise ValueError("col_range should have the first int lower than the second int")
+                value = round(value, 2)
+                return f"set:mixer#gain#{row}#{col_range[0]}-{col_range[1]}#{value}"
+
+            @staticmethod
+            def gain_horizontal(row_range: tuple[int, int], col: int, value: float) -> str:
+                if row_range[0] >= row_range[1]:
+                    raise ValueError("row_range should have the first int lower than the second int")
+                value = round(value, 2)
+                return f"set:mixer#gain#{row_range[0]}-{row_range[1]}#{col}#{value}"
+

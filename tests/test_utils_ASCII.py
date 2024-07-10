@@ -1,4 +1,3 @@
-
 from models._utils import ASCII
 import unittest
 
@@ -99,3 +98,59 @@ class TestASCIIMethods(unittest.TestCase):
     def test_set_output_link(self):
         self.assertEqual(ASCII.set.output.link(1, 1), "set:output#link#1#1")
         self.assertEqual(ASCII.set.output.links(0, 7, 0), "set:output#link#0-7#0")
+
+    def test_get_mixer_switch(self):
+        self.assertEqual(ASCII.get.mixer.switch(1, 2), "get:mixer#switch#1#2")
+        self.assertEqual(ASCII.get.mixer.switch_vertical(1, (0, 3)), "get:mixer#switch#1#0-3")
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch_vertical(1, (3, 3))
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch_vertical(1, (4, 3))
+        self.assertEqual(ASCII.get.mixer.switch_horizontal((0, 2), 3), "get:mixer#switch#0-2#3")
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch_horizontal((2, 2), 3)
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch_horizontal((2, 1), 3)
+
+    def test_get_mixer_gain(self):
+        self.assertEqual(ASCII.get.mixer.gain(1, 2), "get:mixer#gain#1#2")
+        self.assertEqual(ASCII.get.mixer.gain_vertical(1, (0, 3)), "get:mixer#gain#1#0-3")
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.gain_vertical(1, (3, 3))
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.gain_vertical(1, (4, 3))
+        self.assertEqual(ASCII.get.mixer.gain_horizontal((0, 2), 3), "get:mixer#gain#0-2#3")
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.gain_horizontal((2, 2), 3)
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.gain_horizontal((2, 1), 3)
+
+    def test_set_mixer_switch(self):
+        self.assertEqual(ASCII.set.mixer.switch(1, 2, 1), "set:mixer#switch#1#2#1")
+        with self.assertRaises(ValueError):
+            ASCII.set.mixer.switch(1, 2, 2)
+        self.assertEqual(ASCII.set.mixer.switch_vertical(1, (0, 3), 1), "set:mixer#switch#1#0-3#1")
+        with self.assertRaises(ValueError):
+            ASCII.set.mixer.switch_vertical(1, (3, 3), 1)
+        with self.assertRaises(ValueError):
+            ASCII.set.mixer.switch_vertical(1, (0, 3), 2)
+        self.assertEqual(ASCII.set.mixer.switch_horizontal((0, 2), 3, 1), "set:mixer#switch#0-2#3#1")
+        with self.assertRaises(ValueError):
+            ASCII.set.mixer.switch_horizontal((2, 2), 3, 1)
+        with self.assertRaises(ValueError):
+            ASCII.set.mixer.switch_horizontal((0, 2), 3, 2)
+
+    def test_set_mixer_gain(self):
+        self.assertEqual(ASCII.set.mixer.gain(1, 2, -20.5), "set:mixer#gain#1#2#-20.5")
+        self.assertEqual(ASCII.set.mixer.gain_vertical(1, (0, 3), -20.5), "set:mixer#gain#1#0-3#-20.5")
+        with self.assertRaises(ValueError):
+            ASCII.set.mixer.gain_vertical(1, (3, 3), -20.5)
+        self.assertEqual(ASCII.set.mixer.gain_horizontal((0, 2), 3, -20.5), "set:mixer#gain#0-2#3#-20.5")
+        with self.assertRaises(ValueError):
+            ASCII.set.mixer.gain_horizontal((2, 2), 3, -20.5)
+        with self.assertRaises(ValueError):
+            ASCII.set.mixer.gain_horizontal((2, 1), 3, -20.5)
+
+
+if __name__ == "__main__":
+    unittest.main()
