@@ -49,3 +49,18 @@ mtx gains.set(row=0, col=0, value=0)
 
 matrix -tests:
 Use unittest to test all Matrix methods, including the newly added
+
+New class Processor(ABCMeta)
+Future implementations will have following __init__
+# udp settings
+self._ip_addr: ip.IPv4Address = None # set and get methods
+self._port: int = None # set and get methods
+# system and scenes
+self._system_mute: bool = None # set and get methods
+self._scenes: list[str] = None # get method
+# channels and matrix
+self._input_channels: list[InputChannel, ...] = None  # get channels list method, user able to use all methods of InputChannel class methods
+self._output_channels: list[OutputChannel, ...] = None  # get channels list method, user able to use all methods of OutputChannel class methods
+self._matrix: Matrix = None  # get method, user able to use all methods of Matrix class methods
+...
+add all necessary abstract methods to Processor class
