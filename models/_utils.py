@@ -25,6 +25,46 @@ class ASCII:
             def mutes(start: int, end: int):
                 return f"get:input#mute#{start}-{end}"
 
+            @staticmethod
+            def sensitivity(number: int):
+                return f"get:input#sens#{number}"
+
+            @staticmethod
+            def sensitivities(start: int, end: int):
+                return f"get:input#sens#{start}-{end}"
+
+            @staticmethod
+            def phase(number: int):
+                return f"get:input#phase#{number}"
+
+            @staticmethod
+            def phases(start: int, end: int):
+                return f"get:input#phase#{start}-{end}"
+
+            @staticmethod
+            def link(number: int):
+                return f"get:input#link#{number}"
+
+            @staticmethod
+            def links(start: int, end: int):
+                return f"get:input#link#{start}-{end}"
+
+            @staticmethod
+            def type(number: int):
+                return f"get:input#type#{number}"
+
+            @staticmethod
+            def types(start: int, end: int):
+                return f"get:input#type#{start}-{end}"
+
+            @staticmethod
+            def level(number: int):
+                return f"get:input#level#{number}"
+
+            @staticmethod
+            def levels(start: int, end: int):
+                return f"get:input#level#{start}-{end}"
+
         class output:
             @staticmethod
             def gain(number: int):
@@ -41,6 +81,30 @@ class ASCII:
             @staticmethod
             def mutes(start: int, end: int):
                 return f"get:output#mute#{start}-{end}"
+
+            @staticmethod
+            def phase(number: int):
+                return f"get:output#phase#{number}"
+
+            @staticmethod
+            def phases(start: int, end: int):
+                return f"get:output#phase#{start}-{end}"
+
+            @staticmethod
+            def link(number: int):
+                return f"get:output#link#{number}"
+
+            @staticmethod
+            def links(start: int, end: int):
+                return f"get:output#link#{start}-{end}"
+
+            @staticmethod
+            def level(number: int):
+                return f"get:output#level#{number}"
+
+            @staticmethod
+            def levels(start: int, end: int):
+                return f"get:output#level#{start}-{end}"
 
     class set:
         class input:
@@ -78,6 +142,50 @@ class ASCII:
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#mute#{start}-{end}#{state}"
 
+            @staticmethod
+            def sensitivity(number: int, value: int):
+                return f"set:input#sens#{number}#{value}"
+
+            @staticmethod
+            def sensitivities(start: int, end: int, value: int):
+                return f"set:input#sens#{start}-{end}#{value}"
+
+            @staticmethod
+            def phase(number: int, state: int):
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:input#phase#{number}#{state}"
+
+            @staticmethod
+            def phases(start: int, end: int, state: int):
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:input#phase#{start}-{end}#{state}"
+
+            @staticmethod
+            def link(number: int, state: int):
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:input#link#{number}#{state}"
+
+            @staticmethod
+            def links(start: int, end: int, state: int):
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:input#link#{start}-{end}#{state}"
+
+            @staticmethod
+            def type(number: int, value: int):
+                if value not in (0, 1):
+                    raise ValueError("Value must be 0 or 1")
+                return f"set:input#type#{number}#{value}"
+
+            @staticmethod
+            def types(start: int, end: int, value: int):
+                if value not in (0, 1):
+                    raise ValueError("Value must be 0 or 1")
+                return f"set:input#type#{start}-{end}#{value}"
+
         class output:
             @staticmethod
             def gain(number: int, value: float):
@@ -101,14 +209,28 @@ class ASCII:
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#mute#{start}-{end}#{state}"
 
+            @staticmethod
+            def phase(number: int, state: int):
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:output#phase#{number}#{state}"
 
-# Example usage
-print(ASCII.get.input.gain(3))  # Output: get:input#gain#3
-print(ASCII.get.input.gains(0, 7))  # Output: get:input#gain#0-7
-print(ASCII.set.input.gain(3, -20.5))  # Output: set:input#gain#3#-20.5
-print(ASCII.set.input.gains(0, 7, -20.5))  # Output: set:input#gain#0-7#-20.5
+            @staticmethod
+            def phases(start: int, end: int, state: int):
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:output#phase#{start}-{end}#{state}"
 
-print(ASCII.get.input.phantom(1))  # Output: get:input#phant#1
-print(ASCII.get.input.phantoms(0, 7))  # Output: get:input#phant#0-7
-print(ASCII.set.input.phantom(1, 1))  # Output: set:input#phant#1#1
-print(ASCII.set.input.phantoms(0, 7, 0))  # Output: set:input#phant#0-7#0
+            @staticmethod
+            def link(number: int, state: int):
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:output#link#{number}#{state}"
+
+            @staticmethod
+            def links(start: int, end: int, state: int):
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:output#link#{start}-{end}#{state}"
+
+
