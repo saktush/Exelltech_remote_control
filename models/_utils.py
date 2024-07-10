@@ -1,236 +1,256 @@
+from dataclasses import dataclass
+from typing import Literal, AnyStr, Annotated
+
+
 class ASCII:
     class get:
         class input:
             @staticmethod
-            def gain(number: int):
+            def gain(number: int) -> str:
                 return f"get:input#gain#{number}"
 
             @staticmethod
-            def gains(start: int, end: int):
+            def gains(start: int, end: int) -> str:
                 return f"get:input#gain#{start}-{end}"
 
             @staticmethod
-            def phantom(number: int):
+            def phantom(number: int) -> str:
                 return f"get:input#phant#{number}"
 
             @staticmethod
-            def phantoms(start: int, end: int):
+            def phantoms(start: int, end: int) -> str:
                 return f"get:input#phant#{start}-{end}"
 
             @staticmethod
-            def mute(number: int):
+            def mute(number: int) -> str:
                 return f"get:input#mute#{number}"
 
             @staticmethod
-            def mutes(start: int, end: int):
+            def mutes(start: int, end: int) -> str:
                 return f"get:input#mute#{start}-{end}"
 
             @staticmethod
-            def sensitivity(number: int):
+            def sensitivity(number: int) -> str:
                 return f"get:input#sens#{number}"
 
             @staticmethod
-            def sensitivities(start: int, end: int):
+            def sensitivities(start: int, end: int) -> str:
                 return f"get:input#sens#{start}-{end}"
 
             @staticmethod
-            def phase(number: int):
+            def phase(number: int) -> str:
                 return f"get:input#phase#{number}"
 
             @staticmethod
-            def phases(start: int, end: int):
+            def phases(start: int, end: int) -> str:
                 return f"get:input#phase#{start}-{end}"
 
             @staticmethod
-            def link(number: int):
+            def link(number: int) -> str:
                 return f"get:input#link#{number}"
 
             @staticmethod
-            def links(start: int, end: int):
+            def links(start: int, end: int) -> str:
                 return f"get:input#link#{start}-{end}"
 
             @staticmethod
-            def type(number: int):
+            def type(number: int) -> str:
                 return f"get:input#type#{number}"
 
             @staticmethod
-            def types(start: int, end: int):
+            def types(start: int, end: int) -> str:
                 return f"get:input#type#{start}-{end}"
 
             @staticmethod
-            def level(number: int):
+            def level(number: int) -> str:
                 return f"get:input#level#{number}"
 
             @staticmethod
-            def levels(start: int, end: int):
+            def levels(start: int, end: int) -> str:
                 return f"get:input#level#{start}-{end}"
 
         class output:
             @staticmethod
-            def gain(number: int):
+            def gain(number: int) -> str:
                 return f"get:output#gain#{number}"
 
             @staticmethod
-            def gains(start: int, end: int):
+            def gains(start: int, end: int) -> str:
                 return f"get:output#gain#{start}-{end}"
 
             @staticmethod
-            def mute(number: int):
+            def mute(number: int) -> str:
                 return f"get:output#mute#{number}"
 
             @staticmethod
-            def mutes(start: int, end: int):
+            def mutes(start: int, end: int) -> str:
                 return f"get:output#mute#{start}-{end}"
 
             @staticmethod
-            def phase(number: int):
+            def phase(number: int) -> str:
                 return f"get:output#phase#{number}"
 
             @staticmethod
-            def phases(start: int, end: int):
+            def phases(start: int, end: int) -> str:
                 return f"get:output#phase#{start}-{end}"
 
             @staticmethod
-            def link(number: int):
+            def link(number: int) -> str:
                 return f"get:output#link#{number}"
 
             @staticmethod
-            def links(start: int, end: int):
+            def links(start: int, end: int) -> str:
                 return f"get:output#link#{start}-{end}"
 
             @staticmethod
-            def level(number: int):
+            def level(number: int) -> str:
                 return f"get:output#level#{number}"
 
             @staticmethod
-            def levels(start: int, end: int):
+            def levels(start: int, end: int) -> str:
                 return f"get:output#level#{start}-{end}"
 
     class set:
         class input:
             @staticmethod
-            def gain(number: int, value: float):
+            def gain(number: int, value: float) -> str:
+                """Value should be from -72 to 12"""
+                if not (-72 <= value <= 12):
+                    raise ValueError("Gain parameter should be from -72 to 12")
                 value = round(value, 2)
                 return f"set:input#gain#{number}#{value}"
 
             @staticmethod
-            def gains(start: int, end: int, value: float):
+            def gains(start: int, end: int, value: float) -> str:
+                """Value should be from -72 to 12"""
+                if not (-72 <= value <= 12):
+                    raise ValueError("Gain parameter should be from -72 to 12")
                 value = round(value, 2)
                 return f"set:input#gain#{start}-{end}#{value}"
 
             @staticmethod
-            def phantom(number: int, state: int):
+            def phantom(number: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#phant#{number}#{state}"
 
             @staticmethod
-            def phantoms(start: int, end: int, state: int):
+            def phantoms(start: int, end: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#phant#{start}-{end}#{state}"
 
             @staticmethod
-            def mute(number: int, state: int):
+            def mute(number: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#mute#{number}#{state}"
 
             @staticmethod
-            def mutes(start: int, end: int, state: int):
+            def mutes(start: int, end: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#mute#{start}-{end}#{state}"
 
             @staticmethod
-            def sensitivity(number: int, value: int):
+            def sensitivity(number: int, value: int) -> str:
+                """Value is expected to be between 0 and 15"""
+                if not (0 <= value <= 15):
+                    raise ValueError("Value must be between 0 and 15")
                 return f"set:input#sens#{number}#{value}"
 
             @staticmethod
-            def sensitivities(start: int, end: int, value: int):
+            def sensitivities(start: int, end: int, value: int) -> str:
+                """Value is expected to be between 0 and 15"""
+                if not (0 <= value <= 15):
+                    raise ValueError("Value must be between 0 and 15")
                 return f"set:input#sens#{start}-{end}#{value}"
 
             @staticmethod
-            def phase(number: int, state: int):
+            def phase(number: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#phase#{number}#{state}"
 
             @staticmethod
-            def phases(start: int, end: int, state: int):
+            def phases(start: int, end: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#phase#{start}-{end}#{state}"
 
             @staticmethod
-            def link(number: int, state: int):
+            def link(number: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#link#{number}#{state}"
 
             @staticmethod
-            def links(start: int, end: int, state: int):
+            def links(start: int, end: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#link#{start}-{end}#{state}"
 
             @staticmethod
-            def type(number: int, value: int):
+            def type(number: int, value: Literal[0, 1]) -> str:
                 if value not in (0, 1):
                     raise ValueError("Value must be 0 or 1")
                 return f"set:input#type#{number}#{value}"
 
             @staticmethod
-            def types(start: int, end: int, value: int):
+            def types(start: int, end: int, value: Literal[0, 1]) -> str:
                 if value not in (0, 1):
                     raise ValueError("Value must be 0 or 1")
                 return f"set:input#type#{start}-{end}#{value}"
 
         class output:
             @staticmethod
-            def gain(number: int, value: float):
+            def gain(number: int, value: float) -> str:
+                """Value should be from -72 to 12"""
+                if not (-72 <= value <= 12):
+                    raise ValueError("Gain parameter should be from -72 to 12")
                 value = round(value, 2)
                 return f"set:output#gain#{number}#{value}"
 
             @staticmethod
-            def gains(start: int, end: int, value: float):
+            def gains(start: int, end: int, value: float) -> str:
+                """Value should be from -72 to 12"""
+                if not (-72 <= value <= 12):
+                    raise ValueError("Gain parameter should be from -72 to 12")
                 value = round(value, 2)
                 return f"set:output#gain#{start}-{end}#{value}"
 
             @staticmethod
-            def mute(number: int, state: int):
+            def mute(number: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#mute#{number}#{state}"
 
             @staticmethod
-            def mutes(start: int, end: int, state: int):
+            def mutes(start: int, end: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#mute#{start}-{end}#{state}"
 
             @staticmethod
-            def phase(number: int, state: int):
+            def phase(number: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#phase#{number}#{state}"
 
             @staticmethod
-            def phases(start: int, end: int, state: int):
+            def phases(start: int, end: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#phase#{start}-{end}#{state}"
 
             @staticmethod
-            def link(number: int, state: int):
+            def link(number: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#link#{number}#{state}"
 
             @staticmethod
-            def links(start: int, end: int, state: int):
+            def links(start: int, end: int, state: Literal[0, 1]) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#link#{start}-{end}#{state}"
-
-
