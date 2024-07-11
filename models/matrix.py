@@ -18,11 +18,11 @@ class Matrix(ABC):
         self._matrix_gains = [[-120.0 for _ in range(output_channels)] for _ in range(input_channels)]
 
     @property
-    def input_channels(self) -> int:
+    def inputs(self) -> int:
         return self._input_channels
 
     @property
-    def output_channels(self) -> int:
+    def outputs(self) -> int:
         return self._output_channels
 
     @property

@@ -1,5 +1,5 @@
 import unittest
-from models.matrix import Matrix  # Ensure this path matches your actual file structure
+from models.matrix import Matrix
 
 
 class TestMatrix(unittest.TestCase):
@@ -8,8 +8,8 @@ class TestMatrix(unittest.TestCase):
         self.matrix = Matrix(input_channels=4, output_channels=4)
 
     def test_initialization(self):
-        self.assertEqual(self.matrix.input_channels, 4)
-        self.assertEqual(self.matrix.output_channels, 4)
+        self.assertEqual(self.matrix.inputs, 4)
+        self.assertEqual(self.matrix.outputs, 4)
         self.assertEqual(len(self.matrix.routes), 4)
         self.assertEqual(len(self.matrix.gains), 4)
         self.assertTrue(all(len(row) == 4 for row in self.matrix.routes))
@@ -50,10 +50,10 @@ class TestMatrix(unittest.TestCase):
             self.matrix.set_gain(row=0, col=0, value=10)  # Out of range gain
 
     def test_input_channels_property(self):
-        self.assertEqual(self.matrix.input_channels, 4)
+        self.assertEqual(self.matrix.inputs, 4)
 
     def test_output_channels_property(self):
-        self.assertEqual(self.matrix.output_channels, 4)
+        self.assertEqual(self.matrix.outputs, 4)
 
     def test_str_representation(self):
         result = str(self.matrix)
