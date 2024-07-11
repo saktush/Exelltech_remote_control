@@ -2,7 +2,36 @@ from typing import Literal, AnyStr, Annotated
 
 
 class ASCII:
+    """
+    *A class that provides methods for handling various ASCII commands for matrix audio processor.*
+
+    Structure:
+
+    - ASCII.scene: Static methods for saving and toggling scenes.
+    - ASCII.get: Nested classes with static methods for fetching system, scene, input, output, and mixer properties.
+        - ASCII.get.sysctl: System control commands.
+        - ASCII.get.scene: Scene-related commands.
+        - ASCII.get.input: Input-related commands.
+        - ASCII.get.output: Output-related commands.
+        - ASCII.get.mixer: Mixer-related commands.
+
+    - ASCII.set: Nested classes with static methods for setting system, scene, input, output, and mixer properties.
+        - ASCII.set.sysctl: System control commands.
+        - ASCII.set.scene: Scene-related commands.
+        - ASCII.set.input: Input-related commands.
+        - ASCII.set.output: Output-related commands.
+        - ASCII.set.mixer: Mixer-related commands.
+    """
+
     class scene:
+        """
+        A class for handling scene save and toggle operations.
+
+        Methods:
+        - save(scene_number: int) -> str: Save the specified scene number.
+        - toggle(scene_number: int) -> str: Toggle the specified scene number.
+        """
+
         @staticmethod
         def save(scene_number: int) -> str:
             if not (0 <= scene_number <= 15):
@@ -16,6 +45,17 @@ class ASCII:
             return f"scene:toggle#{scene_number}"
 
     class get:
+        """
+        *A class for handling various 'get' commands.*
+
+        Structure:
+
+        - sysctl: Contains system control commands like mute.
+        - scene: Includes commands for fetching scene names and ranges.
+        - input: Provides commands for retrieving input parameters like gain, phantom power, mute, sensitivity, phase, link, type, level, and name.
+        - output: Contains commands for fetching output parameters like gain, mute, phase, link, level, and name.
+        - mixer: Includes commands for retrieving mixer parameters like switch and gain, both for specific rows and ranges.
+        """
         class sysctl:
             @staticmethod
             def mute() -> str:
@@ -222,6 +262,22 @@ class ASCII:
                 return f"get:mixer#gain#{row_range[0]}-{row_range[1]}#{col}"
 
     class set:
+        """
+        *A class for handling various 'set' commands.*
+
+        Static Methods:
+
+        - rescene(): Clears all scene data.
+        - refactory(): Performs a factory reset, including IP address and other settings.
+
+        Structure:
+
+        - sysctl: Contains system control commands such as mute.
+        - scene: Includes commands for setting scene names and ranges.
+        - input: Provides commands for setting input parameters like gain, phantom power, mute, sensitivity, phase, link, type, and name.
+        - output: Contains commands for setting output parameters like gain, mute, phase, link, and name.
+        - mixer: Includes commands for setting mixer parameters like switch and gain, both for specific rows and ranges.
+        """
         @staticmethod
         def rescene():
             """!!! Clears all scene data"""
