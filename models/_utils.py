@@ -79,6 +79,8 @@ class ASCII:
 
             @staticmethod
             def names(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#name#{start}-{end}"
 
         class output:

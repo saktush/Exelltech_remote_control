@@ -162,6 +162,56 @@ class TestASCIIMethods(unittest.TestCase):
         with self.assertRaises(ValueError):
             ASCII.set.sysctl.mute(-1)
 
+    def test_get_input_name(self):
+        self.assertEqual(ASCII.get.input.name(1), "get:input#name#1")
+        self.assertEqual(ASCII.get.input.names(0, 7), "get:input#name#0-7")
+        with self.assertRaises(ValueError):
+            ASCII.get.input.names(7, 7)
+        with self.assertRaises(ValueError):
+            ASCII.get.input.names(8, 7)
+
+    def test_get_output_name(self):
+        self.assertEqual(ASCII.get.output.name(1), "get:output#name#1")
+        self.assertEqual(ASCII.get.output.names(0, 7), "get:output#name#0-7")
+        with self.assertRaises(ValueError):
+            ASCII.get.output.names(7, 7)
+        with self.assertRaises(ValueError):
+            ASCII.get.output.names(8, 7)
+
+    def test_set_input_name(self):
+        self.assertEqual(ASCII.set.input.name(0, "Hello"), "set:input#name#0#Hello")
+        with self.assertRaises(ValueError):
+            ASCII.set.input.name(0, "HelloWorld123456")
+        with self.assertRaises(ValueError):
+            ASCII.set.input.name(0, "HelloWorld😊")
+
+        self.assertEqual(ASCII.set.input.names(0, 1, "Hello"), "set:input#name#0-1#Hello")
+        with self.assertRaises(ValueError):
+            ASCII.set.input.names(0, 1, "HelloWorld123456")
+        with self.assertRaises(ValueError):
+            ASCII.set.input.names(0, 1, "HelloWorld😊")
+        with self.assertRaises(ValueError):
+            ASCII.set.input.names(1, 1, "Hello")
+        with self.assertRaises(ValueError):
+            ASCII.set.input.names(2, 1, "Hello")
+
+    def test_set_output_name(self):
+        self.assertEqual(ASCII.set.output.name(0, "World"), "set:output#name#0#World")
+        with self.assertRaises(ValueError):
+            ASCII.set.output.name(0, "HelloWorld123456")
+        with self.assertRaises(ValueError):
+            ASCII.set.output.name(0, "HelloWorld😊")
+
+        self.assertEqual(ASCII.set.output.names(0, 1, "World"), "set:output#name#0-1#World")
+        with self.assertRaises(ValueError):
+            ASCII.set.output.names(0, 1, "HelloWorld123456")
+        with self.assertRaises(ValueError):
+            ASCII.set.output.names(0, 1, "HelloWorld😊")
+        with self.assertRaises(ValueError):
+            ASCII.set.output.names(1, 1, "World")
+        with self.assertRaises(ValueError):
+            ASCII.set.output.names(2, 1, "World")
+
 
 if __name__ == "__main__":
     unittest.main()
