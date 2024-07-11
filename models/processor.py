@@ -15,17 +15,14 @@ class Processor(ABC):
         self._output_channels: list[OutputChannel] = []
         self._matrix: Matrix = None
 
-    @abstractmethod
-    def set_ip_addr(self, ip_addr: ip.IPv4Address):
-        pass
-
     @property
     @abstractmethod
     def ip_addr(self) -> ip.IPv4Address:
         pass
 
+    @ip_addr.setter
     @abstractmethod
-    def set_port(self, port: int):
+    def ip_addr(self, ip_addr: ip.IPv4Address):
         pass
 
     @property
@@ -33,8 +30,9 @@ class Processor(ABC):
     def port(self) -> int:
         pass
 
+    @port.setter
     @abstractmethod
-    def set_system_mute(self, mute: bool):
+    def port(self, port: int):
         pass
 
     @property
@@ -42,12 +40,9 @@ class Processor(ABC):
     def system_mute(self) -> bool:
         pass
 
+    @system_mute.setter
     @abstractmethod
-    def add_scene(self, scene_name: str):
-        pass
-
-    @abstractmethod
-    def remove_scene(self, scene_name: str):
+    def system_mute(self, mute: bool):
         pass
 
     @property
@@ -55,8 +50,9 @@ class Processor(ABC):
     def scenes(self) -> list[str]:
         pass
 
+    @scenes.setter
     @abstractmethod
-    def add_input_channels(self, channels: list[InputChannel]):
+    def scenes(self, name: str):
         pass
 
     @property
@@ -64,17 +60,9 @@ class Processor(ABC):
     def input_channels(self) -> list[InputChannel]:
         pass
 
-    @abstractmethod
-    def add_output_channels(self, channels: list[OutputChannel]):
-        pass
-
     @property
     @abstractmethod
     def output_channels(self) -> list[OutputChannel]:
-        pass
-
-    @abstractmethod
-    def add_matrix(self, matrix: Matrix):
         pass
 
     @property
