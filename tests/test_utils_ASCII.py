@@ -212,6 +212,31 @@ class TestASCIIMethods(unittest.TestCase):
         with self.assertRaises(ValueError):
             ASCII.set.output.names(2, 1, "World")
 
+    def test_get_scene_name(self):
+        self.assertEqual(ASCII.get.scene.name(1), "get:scene#name#1")
+        self.assertEqual(ASCII.get.scene.names(0, 15), "get:scene#name#0-15")
+        with self.assertRaises(ValueError):
+            ASCII.get.scene.names(15, 15)
+        with self.assertRaises(ValueError):
+            ASCII.get.scene.names(16, 15)
+
+    def test_set_scene_name(self):
+        self.assertEqual(ASCII.set.scene.name(0, "Hello"), "set:scene#name#0#Hello")
+        with self.assertRaises(ValueError):
+            ASCII.set.scene.name(0, "HelloWorld123456")
+        with self.assertRaises(ValueError):
+            ASCII.set.scene.name(0, "HelloWorld😊")
+
+        self.assertEqual(ASCII.set.scene.names(0, 1, "Hello"), "set:scene#name#0-1#Hello")
+        with self.assertRaises(ValueError):
+            ASCII.set.scene.names(0, 1, "HelloWorld123456")
+        with self.assertRaises(ValueError):
+            ASCII.set.scene.names(0, 1, "HelloWorld😊")
+        with self.assertRaises(ValueError):
+            ASCII.set.scene.names(1, 1, "Hello")
+        with self.assertRaises(ValueError):
+            ASCII.set.scene.names(2, 1, "Hello")
+
 
 if __name__ == "__main__":
     unittest.main()

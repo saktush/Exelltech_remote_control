@@ -8,6 +8,21 @@ class ASCII:
             def mute() -> str:
                 return "get:sysctl#mute"
 
+        class scene:
+            @staticmethod
+            def name(number: int) -> str:
+                if number > 15:
+                    raise ValueError("Scene number should be 0 to 15")
+                return f"get:scene#name#{number}"
+
+            @staticmethod
+            def names(start: int, end: int) -> str:
+                if end > 15:
+                    raise ValueError("Scene max number should be 1 to 15")
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
+                return f"get:scene#name#{start}-{end}"
+
         class input:
             @staticmethod
             def gain(number: int) -> str:
@@ -174,6 +189,25 @@ class ASCII:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:sysctl#mute#{state}"
+
+        class scene:
+            @staticmethod
+            def name(number: int, name: str) -> str:
+                if len(name) > 15:
+                    raise ValueError("Name should be 15 symbols maximum")
+                if not name.isascii():
+                    raise ValueError("Name should be ASCII")
+                return f"set:scene#name#{number}#{name}"
+
+            @staticmethod
+            def names(start: int, end: int, name: str) -> str:
+                if len(name) > 15:
+                    raise ValueError("Name should be 15 symbols maximum")
+                if not name.isascii():
+                    raise ValueError("Name should be ASCII")
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
+                return f"set:scene#name#{start}-{end}#{name}"
 
         class input:
             @staticmethod
