@@ -2,6 +2,19 @@ from typing import Literal, AnyStr, Annotated
 
 
 class ASCII:
+    class scene:
+        @staticmethod
+        def save(scene_number: int) -> str:
+            if not (0 <= scene_number <= 15):
+                raise ValueError("Scene number must be between 0 and 15")
+            return f"scene:save#{scene_number}"
+
+        @staticmethod
+        def toggle(scene_number: int) -> str:
+            if not (0 <= scene_number <= 15):
+                raise ValueError("Scene number must be between 0 and 15")
+            return f"scene:toggle#{scene_number}"
+
     class get:
         class sysctl:
             @staticmethod
