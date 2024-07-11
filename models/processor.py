@@ -6,6 +6,15 @@ from matrix import Matrix
 
 class Processor(ABC):
 
+    def __init__(self):
+        self._ip_addr: ip.IPv4Address = None
+        self._port: int = None
+        self._system_mute: bool = None
+        self._scenes: list[str] = []
+        self._input_channels: list[InputChannel] = []
+        self._output_channels: list[OutputChannel] = []
+        self._matrix: Matrix = None
+
     @abstractmethod
     def set_ip_addr(self, ip_addr: ip.IPv4Address):
         pass
