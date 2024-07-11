@@ -43,6 +43,8 @@ class ASCII:
 
             @staticmethod
             def gains(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#gain#{start}-{end}"
 
             @staticmethod
@@ -51,6 +53,8 @@ class ASCII:
 
             @staticmethod
             def phantoms(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#phant#{start}-{end}"
 
             @staticmethod
@@ -59,6 +63,8 @@ class ASCII:
 
             @staticmethod
             def mutes(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#mute#{start}-{end}"
 
             @staticmethod
@@ -67,6 +73,8 @@ class ASCII:
 
             @staticmethod
             def sensitivities(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#sens#{start}-{end}"
 
             @staticmethod
@@ -75,6 +83,8 @@ class ASCII:
 
             @staticmethod
             def phases(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#phase#{start}-{end}"
 
             @staticmethod
@@ -83,6 +93,8 @@ class ASCII:
 
             @staticmethod
             def links(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#link#{start}-{end}"
 
             @staticmethod
@@ -91,6 +103,8 @@ class ASCII:
 
             @staticmethod
             def types(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#type#{start}-{end}"
 
             @staticmethod
@@ -99,6 +113,8 @@ class ASCII:
 
             @staticmethod
             def levels(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:input#level#{start}-{end}"
 
             @staticmethod
@@ -118,6 +134,8 @@ class ASCII:
 
             @staticmethod
             def gains(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:output#gain#{start}-{end}"
 
             @staticmethod
@@ -126,6 +144,8 @@ class ASCII:
 
             @staticmethod
             def mutes(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:output#mute#{start}-{end}"
 
             @staticmethod
@@ -134,6 +154,8 @@ class ASCII:
 
             @staticmethod
             def phases(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:output#phase#{start}-{end}"
 
             @staticmethod
@@ -142,6 +164,8 @@ class ASCII:
 
             @staticmethod
             def links(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:output#link#{start}-{end}"
 
             @staticmethod
@@ -150,6 +174,8 @@ class ASCII:
 
             @staticmethod
             def levels(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 return f"get:output#level#{start}-{end}"
 
             @staticmethod
@@ -244,6 +270,8 @@ class ASCII:
             @staticmethod
             def gains(start: int, end: int, value: float) -> str:
                 """Value should be from -72 to 12"""
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if not (-72 <= value <= 12):
                     raise ValueError("Gain parameter should be from -72 to 12")
                 value = round(value, 2)
@@ -257,6 +285,8 @@ class ASCII:
 
             @staticmethod
             def phantoms(start: int, end: int, state: Literal[0, 1]) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#phant#{start}-{end}#{state}"
@@ -269,6 +299,8 @@ class ASCII:
 
             @staticmethod
             def mutes(start: int, end: int, state: Literal[0, 1]) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#mute#{start}-{end}#{state}"
@@ -283,6 +315,8 @@ class ASCII:
             @staticmethod
             def sensitivities(start: int, end: int, value: int) -> str:
                 """Value is expected to be between 0 and 15"""
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if not (0 <= value <= 15):
                     raise ValueError("Value must be between 0 and 15")
                 return f"set:input#sens#{start}-{end}#{value}"
@@ -295,18 +329,26 @@ class ASCII:
 
             @staticmethod
             def phases(start: int, end: int, state: Literal[0, 1]) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#phase#{start}-{end}#{state}"
 
             @staticmethod
             def link(number: int, state: Literal[0, 1]) -> str:
+                """
+                Link affects odd to even both channels,
+                if call  .link(number=0, state=1) -> it will also affect channel(1)
+                """
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#link#{number}#{state}"
 
             @staticmethod
             def links(start: int, end: int, state: Literal[0, 1]) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#link#{start}-{end}#{state}"
@@ -319,6 +361,8 @@ class ASCII:
 
             @staticmethod
             def types(start: int, end: int, value: Literal[0, 1]) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if value not in (0, 1):
                     raise ValueError("Value must be 0 or 1")
                 return f"set:input#type#{start}-{end}#{value}"
@@ -334,6 +378,8 @@ class ASCII:
 
             @staticmethod
             def names(start: int, end: int, name: str) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if len(name) > 15:
                     raise ValueError("Name should be 15 symbols maximum")
                 if not name.isascii():
@@ -354,6 +400,8 @@ class ASCII:
             @staticmethod
             def gains(start: int, end: int, value: float) -> str:
                 """Value should be from -72 to 12"""
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if not (-72 <= value <= 12):
                     raise ValueError("Gain parameter should be from -72 to 12")
                 value = round(value, 2)
@@ -367,6 +415,8 @@ class ASCII:
 
             @staticmethod
             def mutes(start: int, end: int, state: Literal[0, 1]) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#mute#{start}-{end}#{state}"
@@ -379,6 +429,8 @@ class ASCII:
 
             @staticmethod
             def phases(start: int, end: int, state: Literal[0, 1]) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#phase#{start}-{end}#{state}"
@@ -391,6 +443,8 @@ class ASCII:
 
             @staticmethod
             def links(start: int, end: int, state: Literal[0, 1]) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#link#{start}-{end}#{state}"
@@ -405,6 +459,8 @@ class ASCII:
 
             @staticmethod
             def names(start: int, end: int, name: str) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
                 if len(name) > 15:
                     raise ValueError("Name should be 15 symbols maximum")
                 if not name.isascii():
@@ -454,4 +510,3 @@ class ASCII:
                     raise ValueError("row_range should have the first int lower than the second int")
                 value = round(value, 2)
                 return f"set:mixer#gain#{row_range[0]}-{row_range[1]}#{col}#{value}"
-
