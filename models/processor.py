@@ -1,7 +1,7 @@
 import ipaddress as ip
 from abc import ABC, abstractmethod
-from channel import InputChannel, OutputChannel
-from matrix import Matrix
+from models.channel import InputChannel, OutputChannel
+from models.matrix import Matrix
 
 
 class Processor(ABC):
