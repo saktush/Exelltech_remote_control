@@ -73,6 +73,14 @@ class ASCII:
             def levels(start: int, end: int) -> str:
                 return f"get:input#level#{start}-{end}"
 
+            @staticmethod
+            def name(number: int) -> str:
+                return f"get:input#name#{number}"
+
+            @staticmethod
+            def names(start: int, end: int) -> str:
+                return f"get:input#name#{start}-{end}"
+
         class output:
             @staticmethod
             def gain(number: int) -> str:
@@ -113,6 +121,16 @@ class ASCII:
             @staticmethod
             def levels(start: int, end: int) -> str:
                 return f"get:output#level#{start}-{end}"
+
+            @staticmethod
+            def name(number: int) -> str:
+                return f"get:output#name#{number}"
+
+            @staticmethod
+            def names(start: int, end: int) -> str:
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
+                return f"get:output#name#{start}-{end}"
 
         class mixer:
             @staticmethod
@@ -246,6 +264,25 @@ class ASCII:
                     raise ValueError("Value must be 0 or 1")
                 return f"set:input#type#{start}-{end}#{value}"
 
+            @staticmethod
+            def name(number: int, name: str) -> str:
+                """Name should be ASCII, max 15 symbols"""
+                if len(name) > 15:
+                    raise ValueError("Name should be 15 symbols maximum")
+                if not name.isascii():
+                    raise ValueError("Name should be ASCII")
+                return f"set:input#name#{number}#{name}"
+
+            @staticmethod
+            def names(start: int, end: int, name: str) -> str:
+                if len(name) > 15:
+                    raise ValueError("Name should be 15 symbols maximum")
+                if not name.isascii():
+                    raise ValueError("Name should be ASCII")
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
+                return f"set:input#name#{start}-{end}#{name}"
+
         class output:
             @staticmethod
             def gain(number: int, value: float) -> str:
@@ -298,6 +335,24 @@ class ASCII:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#link#{start}-{end}#{state}"
+
+            @staticmethod
+            def name(number: int, name: str) -> str:
+                if len(name) > 15:
+                    raise ValueError("Name should be 15 symbols maximum")
+                if not name.isascii():
+                    raise ValueError("Name should be ASCII")
+                return f"set:output#name#{number}#{name}"
+
+            @staticmethod
+            def names(start: int, end: int, name: str) -> str:
+                if len(name) > 15:
+                    raise ValueError("Name should be 15 symbols maximum")
+                if not name.isascii():
+                    raise ValueError("Name should be ASCII")
+                if start >= end:
+                    raise ValueError("Start argument should be lower than End")
+                return f"set:output#name#{start}-{end}#{name}"
 
         class mixer:
             @staticmethod
