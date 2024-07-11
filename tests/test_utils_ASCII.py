@@ -1,4 +1,4 @@
-from models._utils import ASCII
+from models.api import ASCII
 import unittest
 
 
