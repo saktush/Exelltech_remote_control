@@ -3,6 +3,7 @@ import unittest
 
 
 class TestASCIIMethods(unittest.TestCase):
+    # get methods
     def test_get_input_gain(self):
         self.assertEqual(ASCII.get.input.gain(1), "get:input#gain#1")
         self.assertEqual(ASCII.get.input.gains(0, 7), "get:input#gain#0-7")
@@ -55,6 +56,60 @@ class TestASCIIMethods(unittest.TestCase):
         self.assertEqual(ASCII.get.output.level(1), "get:output#level#1")
         self.assertEqual(ASCII.get.output.levels(0, 7), "get:output#level#0-7")
 
+    def test_get_system_mute(self):
+        self.assertEqual(ASCII.get.sysctl.mute(), "get:sysctl#mute")
+
+    def test_get_input_name(self):
+        self.assertEqual(ASCII.get.input.name(1), "get:input#name#1")
+        self.assertEqual(ASCII.get.input.names(0, 7), "get:input#name#0-7")
+        with self.assertRaises(ValueError):
+            ASCII.get.input.names(7, 7)
+        with self.assertRaises(ValueError):
+            ASCII.get.input.names(8, 7)
+
+    def test_get_output_name(self):
+        self.assertEqual(ASCII.get.output.name(1), "get:output#name#1")
+        self.assertEqual(ASCII.get.output.names(0, 7), "get:output#name#0-7")
+        with self.assertRaises(ValueError):
+            ASCII.get.output.names(7, 7)
+        with self.assertRaises(ValueError):
+            ASCII.get.output.names(8, 7)
+
+    def test_get_mixer_switch(self):
+        self.assertEqual(ASCII.get.mixer.switch(1, 2), "get:mixer#switch#1#2")
+        self.assertEqual(ASCII.get.mixer.switch_vertical(1, (0, 3)), "get:mixer#switch#1#0-3")
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch_vertical(1, (3, 3))
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch_vertical(1, (4, 3))
+        self.assertEqual(ASCII.get.mixer.switch_horizontal((0, 2), 3), "get:mixer#switch#0-2#3")
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch_horizontal((2, 2), 3)
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch_horizontal((2, 1), 3)
+
+    def test_get_mixer_gain(self):
+        self.assertEqual(ASCII.get.mixer.gain(1, 2), "get:mixer#gain#1#2")
+        self.assertEqual(ASCII.get.mixer.gain_vertical(1, (0, 3)), "get:mixer#gain#1#0-3")
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.gain_vertical(1, (3, 3))
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.gain_vertical(1, (4, 3))
+        self.assertEqual(ASCII.get.mixer.gain_horizontal((0, 2), 3), "get:mixer#gain#0-2#3")
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.gain_horizontal((2, 2), 3)
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.gain_horizontal((2, 1), 3)
+
+    def test_get_scene_name(self):
+        self.assertEqual(ASCII.get.scene.name(1), "get:scene#name#1")
+        self.assertEqual(ASCII.get.scene.names(0, 15), "get:scene#name#0-15")
+        with self.assertRaises(ValueError):
+            ASCII.get.scene.names(15, 15)
+        with self.assertRaises(ValueError):
+            ASCII.get.scene.names(16, 15)
+
+    # set methods
     def test_set_input_gain(self):
         self.assertEqual(ASCII.set.input.gain(1, 2.5), "set:input#gain#1#2.5")
         self.assertEqual(ASCII.set.input.gains(0, 7, 2.5), "set:input#gain#0-7#2.5")
@@ -99,32 +154,6 @@ class TestASCIIMethods(unittest.TestCase):
         self.assertEqual(ASCII.set.output.link(1, 1), "set:output#link#1#1")
         self.assertEqual(ASCII.set.output.links(0, 7, 0), "set:output#link#0-7#0")
 
-    def test_get_mixer_switch(self):
-        self.assertEqual(ASCII.get.mixer.switch(1, 2), "get:mixer#switch#1#2")
-        self.assertEqual(ASCII.get.mixer.switch_vertical(1, (0, 3)), "get:mixer#switch#1#0-3")
-        with self.assertRaises(ValueError):
-            ASCII.get.mixer.switch_vertical(1, (3, 3))
-        with self.assertRaises(ValueError):
-            ASCII.get.mixer.switch_vertical(1, (4, 3))
-        self.assertEqual(ASCII.get.mixer.switch_horizontal((0, 2), 3), "get:mixer#switch#0-2#3")
-        with self.assertRaises(ValueError):
-            ASCII.get.mixer.switch_horizontal((2, 2), 3)
-        with self.assertRaises(ValueError):
-            ASCII.get.mixer.switch_horizontal((2, 1), 3)
-
-    def test_get_mixer_gain(self):
-        self.assertEqual(ASCII.get.mixer.gain(1, 2), "get:mixer#gain#1#2")
-        self.assertEqual(ASCII.get.mixer.gain_vertical(1, (0, 3)), "get:mixer#gain#1#0-3")
-        with self.assertRaises(ValueError):
-            ASCII.get.mixer.gain_vertical(1, (3, 3))
-        with self.assertRaises(ValueError):
-            ASCII.get.mixer.gain_vertical(1, (4, 3))
-        self.assertEqual(ASCII.get.mixer.gain_horizontal((0, 2), 3), "get:mixer#gain#0-2#3")
-        with self.assertRaises(ValueError):
-            ASCII.get.mixer.gain_horizontal((2, 2), 3)
-        with self.assertRaises(ValueError):
-            ASCII.get.mixer.gain_horizontal((2, 1), 3)
-
     def test_set_mixer_switch(self):
         self.assertEqual(ASCII.set.mixer.switch(1, 2, 1), "set:mixer#switch#1#2#1")
         with self.assertRaises(ValueError):
@@ -151,9 +180,6 @@ class TestASCIIMethods(unittest.TestCase):
         with self.assertRaises(ValueError):
             ASCII.set.mixer.gain_horizontal((2, 1), 3, -20.5)
 
-    def test_get_system_mute(self):
-        self.assertEqual(ASCII.get.sysctl.mute(), "get:sysctl#mute")
-
     def test_set_system_mute(self):
         self.assertEqual(ASCII.set.sysctl.mute(1), "set:sysctl#mute#1")
         self.assertEqual(ASCII.set.sysctl.mute(0), "set:sysctl#mute#0")
@@ -161,22 +187,6 @@ class TestASCIIMethods(unittest.TestCase):
             ASCII.set.sysctl.mute(2)
         with self.assertRaises(ValueError):
             ASCII.set.sysctl.mute(-1)
-
-    def test_get_input_name(self):
-        self.assertEqual(ASCII.get.input.name(1), "get:input#name#1")
-        self.assertEqual(ASCII.get.input.names(0, 7), "get:input#name#0-7")
-        with self.assertRaises(ValueError):
-            ASCII.get.input.names(7, 7)
-        with self.assertRaises(ValueError):
-            ASCII.get.input.names(8, 7)
-
-    def test_get_output_name(self):
-        self.assertEqual(ASCII.get.output.name(1), "get:output#name#1")
-        self.assertEqual(ASCII.get.output.names(0, 7), "get:output#name#0-7")
-        with self.assertRaises(ValueError):
-            ASCII.get.output.names(7, 7)
-        with self.assertRaises(ValueError):
-            ASCII.get.output.names(8, 7)
 
     def test_set_input_name(self):
         self.assertEqual(ASCII.set.input.name(0, "Hello"), "set:input#name#0#Hello")
@@ -212,14 +222,6 @@ class TestASCIIMethods(unittest.TestCase):
         with self.assertRaises(ValueError):
             ASCII.set.output.names(2, 1, "World")
 
-    def test_get_scene_name(self):
-        self.assertEqual(ASCII.get.scene.name(1), "get:scene#name#1")
-        self.assertEqual(ASCII.get.scene.names(0, 15), "get:scene#name#0-15")
-        with self.assertRaises(ValueError):
-            ASCII.get.scene.names(15, 15)
-        with self.assertRaises(ValueError):
-            ASCII.get.scene.names(16, 15)
-
     def test_set_scene_name(self):
         self.assertEqual(ASCII.set.scene.name(0, "Hello"), "set:scene#name#0#Hello")
         with self.assertRaises(ValueError):
@@ -237,6 +239,7 @@ class TestASCIIMethods(unittest.TestCase):
         with self.assertRaises(ValueError):
             ASCII.set.scene.names(2, 1, "Hello")
 
+    # scene methods
     def test_scene_save(self):
         self.assertEqual(ASCII.scene.save(1), "scene:save#1")
         with self.assertRaises(ValueError):
@@ -250,6 +253,13 @@ class TestASCIIMethods(unittest.TestCase):
             ASCII.scene.toggle(16)
         with self.assertRaises(ValueError):
             ASCII.scene.toggle(-1)
+
+    # factory reset
+    def test_set_rescene(self):
+        self.assertEqual(ASCII.set.rescene(), "set:rescene")
+
+    def test_set_refactory(self):
+        self.assertEqual(ASCII.set.refactory(), "set:refactory")
 
 
 if __name__ == "__main__":

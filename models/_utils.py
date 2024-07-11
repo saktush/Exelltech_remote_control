@@ -196,6 +196,16 @@ class ASCII:
                 return f"get:mixer#gain#{row_range[0]}-{row_range[1]}#{col}"
 
     class set:
+        @staticmethod
+        def rescene():
+            """!!! Clears all scene data"""
+            return "set:rescene"
+
+        @staticmethod
+        def refactory():
+            """!!! Factory reset, including ip address and other settings"""
+            return "set:refactory"
+
         class sysctl:
             @staticmethod
             def mute(state: Literal[0, 1]) -> str:
