@@ -1,9 +1,13 @@
-from dataclasses import dataclass
 from typing import Literal, AnyStr, Annotated
 
 
 class ASCII:
     class get:
+        class sysctl:
+            @staticmethod
+            def mute() -> str:
+                return "get:sysctl#mute"
+
         class input:
             @staticmethod
             def gain(number: int) -> str:
@@ -144,6 +148,13 @@ class ASCII:
                 return f"get:mixer#gain#{row_range[0]}-{row_range[1]}#{col}"
 
     class set:
+        class sysctl:
+            @staticmethod
+            def mute(state: Literal[0, 1]) -> str:
+                if state not in (0, 1):
+                    raise ValueError("State must be 0 (off) or 1 (on)")
+                return f"set:sysctl#mute#{state}"
+
         class input:
             @staticmethod
             def gain(number: int, value: float) -> str:

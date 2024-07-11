@@ -151,6 +151,17 @@ class TestASCIIMethods(unittest.TestCase):
         with self.assertRaises(ValueError):
             ASCII.set.mixer.gain_horizontal((2, 1), 3, -20.5)
 
+    def test_get_system_mute(self):
+        self.assertEqual(ASCII.get.sysctl.mute(), "get:sysctl#mute")
+
+    def test_set_system_mute(self):
+        self.assertEqual(ASCII.set.sysctl.mute(1), "set:sysctl#mute#1")
+        self.assertEqual(ASCII.set.sysctl.mute(0), "set:sysctl#mute#0")
+        with self.assertRaises(ValueError):
+            ASCII.set.sysctl.mute(2)
+        with self.assertRaises(ValueError):
+            ASCII.set.sysctl.mute(-1)
+
 
 if __name__ == "__main__":
     unittest.main()
