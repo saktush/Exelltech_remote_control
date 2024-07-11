@@ -1,5 +1,5 @@
 import ipaddress as ip
-from abc import ABC
+from abc import ABC, abstractmethod
 from channel import InputChannel, OutputChannel
 from matrix import Matrix
 
@@ -68,19 +68,18 @@ class Processor(ABC):
 
 class ELTProcessor(Processor):
 
-    def __init__(self, ip_addr: ip.IPv4Address, port: int, inputs, outputs):
+    def __init__(self, ip_addr: ip.IPv4Address, port: int, inputs: int, outputs: int):
         """
-
-        :param ip_addr:
-        :param port:
-        :param inputs:
-        :param outputs:
+        :param ip_addr: IPv4 address.
+        :param port: Port number.
+        :param inputs: Number of input channels.
+        :param outputs: Number of output channels.
         """
         super().__init__()
         self._ip_addr: ip.IPv4Address = ip_addr
         self._port: int = port
         self._system_mute: bool = False
-        self._scenes: list[str] = []
+        self._scenes: list[str] = [f"Preset {i}" for i in range(16)]
         self._input: list[InputChannel] = [InputChannel(n) for n in range(inputs)]
         self._output: list[OutputChannel] = [OutputChannel(n) for n in range(outputs)]
         self._matrix: Matrix = Matrix(inputs, outputs)
@@ -94,7 +93,7 @@ class ELTProcessor(Processor):
         try:
             self._ip_addr = ip.ip_address(ip_addr)
         except ValueError:
-            pass
+            raise ValueError(f"Invalid IP address: {ip_addr}")
 
     @property
     def port(self) -> int:
