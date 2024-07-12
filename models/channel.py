@@ -99,18 +99,18 @@ class Channel(ABC):
 
 
 class InputChannel(Channel):
-    def __init__(self, number: int, is_dante: bool = False, ) -> None:
+    def __init__(self, number: int, is_digital: bool = False) -> None:
         super().__init__()
         if not isinstance(number, int):
             raise ValueError("Number must be an integer.")
         if not 0 <= number <= 63:
             raise ValueError("Channel number must be between 0 and 64.")
-        if not isinstance(is_dante, bool):
-            raise ValueError("is_dante parameter must be a boolean")
+        if not isinstance(is_digital, bool):
+            raise ValueError("is_digital parameter must be a boolean")
 
         self._number = number
         self._name = f'IN{number + 1}'
-        self._isdante: bool = is_dante
+        self._is_digital: bool = is_digital
         self._mute = False
         self._phantom_power = False
         self._gain = 0.0
@@ -133,19 +133,19 @@ class InputChannel(Channel):
         self._source = value
 
     @property
-    def isdante(self) -> bool:
-        return self._isdante
+    def is_digital(self) -> bool:
+        return self._is_digital
 
     @property
     def sensitivity(self) -> int:
-        if self._isdante:
-            raise AttributeError("Dante channels has no sensitivity settings")
+        if self._is_digital:
+            raise AttributeError("digital channel has no sensitivity settings")
         return self._sensitivity
 
     @sensitivity.setter
     def sensitivity(self, value: int) -> None:
-        if self._isdante:
-            raise AttributeError("Dante channels has no sensitivity settings")
+        if self._is_digital:
+            raise AttributeError("digital channels has no sensitivity settings")
         if not isinstance(value, int):
             raise ValueError("Sensitivity must be an integer.")
         if not 0 <= value <= 15:
@@ -154,14 +154,14 @@ class InputChannel(Channel):
 
     @property
     def phantom_power(self) -> bool:
-        if self._isdante:
-            raise AttributeError("Dante channels has no phantom power")
+        if self._is_digital:
+            raise AttributeError("digital channels has no phantom power")
         return self._phantom_power
 
     @phantom_power.setter
     def phantom_power(self, value: bool) -> None:
-        if self._isdante:
-            raise AttributeError("Dante channels has no phantom power")
+        if self._is_digital:
+            raise AttributeError("digital channels has no phantom power")
         if not isinstance(value, bool):
             raise ValueError("Phantom power must be a boolean.")
         self._phantom_power = value
@@ -178,18 +178,18 @@ class InputChannel(Channel):
 
 
 class OutputChannel(Channel):
-    def __init__(self, number: int, is_dante: bool = False, ) -> None:
+    def __init__(self, number: int, is_digital: bool = False, ) -> None:
         super().__init__()
         if not isinstance(number, int):
             raise ValueError("Number must be an integer.")
         if not 0 <= number <= 63:
             raise ValueError("Channel number must be between 0 and 64.")
-        if not isinstance(is_dante, bool):
-            raise ValueError("is_dante parameter must be a boolean")
+        if not isinstance(is_digital, bool):
+            raise ValueError("is_digital parameter must be a boolean")
 
         self._number = number
         self._name = f'OUT{number + 1}'
-        self._isdante: bool = is_dante
+        self._is_digital: bool = is_digital
         self._mute = False
         self._gain = 0.0
         self._link = False
@@ -207,5 +207,5 @@ class OutputChannel(Channel):
         self._phase = value
 
     @property
-    def isdante(self) -> bool:
-        return self._isdante
+    def is_digital(self) -> bool:
+        return self._is_digital

@@ -59,7 +59,7 @@ class TestChannel(unittest.TestCase):
 class TestInputChannel(unittest.TestCase):
 
     def setUp(self):
-        self.input_channel = InputChannel(number=0, is_dante=False)
+        self.input_channel = InputChannel(number=0, is_digital=False)
 
     def test_initialization(self):
         self.assertEqual(self.input_channel.number, 0)
@@ -68,7 +68,7 @@ class TestInputChannel(unittest.TestCase):
         self.assertEqual(self.input_channel.gain, 0.0)
         self.assertFalse(self.input_channel.link)
         self.assertEqual(self.input_channel.level, -160.0)
-        self.assertFalse(self.input_channel.isdante)
+        self.assertFalse(self.input_channel.is_digital)
 
     def test_source_setter(self):
         self.input_channel.source = "generator"
@@ -104,19 +104,19 @@ class TestInputChannel(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.input_channel.phase = "reversed"  # Not a boolean
 
-    def test_dante_channel_restrictions(self):
-        dante_channel = InputChannel(number=1, is_dante=True)
+    def test_digital_channel_restrictions(self):
+        digital_channel = InputChannel(number=1, is_digital=True)
         with self.assertRaises(AttributeError):
-            dante_channel.sensitivity
+            digital_channel.sensitivity
 
         with self.assertRaises(AttributeError):
-            dante_channel.phantom_power = True
+            digital_channel.phantom_power = True
 
 
 class TestOutputChannel(unittest.TestCase):
 
     def setUp(self):
-        self.output_channel = OutputChannel(number=1, is_dante=False)
+        self.output_channel = OutputChannel(number=1, is_digital=False)
 
     def test_initialization(self):
         self.assertEqual(self.output_channel.number, 1)
@@ -125,7 +125,7 @@ class TestOutputChannel(unittest.TestCase):
         self.assertEqual(self.output_channel.gain, 0.0)
         self.assertFalse(self.output_channel.link)
         self.assertEqual(self.output_channel.level, -160.0)
-        self.assertFalse(self.output_channel.isdante)
+        self.assertFalse(self.output_channel.is_digital)
 
     def test_phase_setter(self):
         self.output_channel.phase = True
