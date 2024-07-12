@@ -20,6 +20,15 @@ def hex_to_bytes(message: str) -> bytes:
 
 
 class UDP:
+    """
+    A class encapsulating UDP communication functionalities with configurable timeout and buffer size.
+    Provides methods to send and receive UDP messages with proper handling of IP addresses
+    and message encoding.
+
+    :param TIMEOUT: float
+    :param BUFFERSIZE: int
+
+    """
     TIMEOUT: float = 0.25
     BUFFERSIZE: int = 256
 
@@ -27,7 +36,22 @@ class UDP:
     def send(source_ip: Union[ip.IPv4Address, str], source_port: int,
              dest_ip: Union[ip.IPv4Address, str], dest_port: int,
              message: str) -> Union[str, None]:
+        """
+        Sends a UDP message from the specified source to the destination. Handles conversion
+        of message to bytes and automatically closes the socket after the operation.
 
+        :param source_ip: IPv4Address | str: The source IPv4 address.
+        :param source_port: int: The source port number.
+        :param dest_ip: Pv4Address | str: The destination IPv4 address.
+        :param dest_port: int: The destination port number.
+        :param message: str: ASCII message to send
+
+        :return: str | None: The response message decoded to ASCII, or None if there is a timeout.
+
+        :raises ValueError: If IP addresses or port numbers are not valid.
+        :raises UnicodeEncodeError: If message encoding fails.
+        :raises RuntimeError: If a socket operation fails.
+        """
         if not isinstance(source_ip, (str, ip.IPv4Address)) or not isinstance(dest_ip, (str, ip.IPv4Address)):
             raise ValueError("IP addresses should be of type str or ip.IPv4Address")
 
