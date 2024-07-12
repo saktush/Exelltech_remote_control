@@ -25,8 +25,8 @@ class UDP:
     Provides methods to send and receive UDP messages with proper handling of IP addresses
     and message encoding.
 
-    :param TIMEOUT: float
-    :param BUFFERSIZE: int
+    - param TIMEOUT: float
+    - param BUFFERSIZE: int
 
     """
     TIMEOUT: float = 0.25
