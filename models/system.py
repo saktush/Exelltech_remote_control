@@ -31,9 +31,9 @@ class UDP:
             raise e
 
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-            sock.bind((source_ip, source_port))
+            sock.bind((source_ip.compressed, source_port))
             sock.settimeout(UDP.TIMEOUT)
-            sock.sendto(message, (dest_ip, dest_port))
+            sock.sendto(message, (dest_ip.compressed, dest_port))
             try:
                 response = sock.recv(UDP.BUFFERSIZE)
             except socket.timeout:
