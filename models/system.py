@@ -1,5 +1,6 @@
 import socket
 import ipaddress as ip
+from typing import Union
 
 
 def bytes_to_hex(b_string: bytes) -> str:
@@ -23,23 +24,41 @@ class UDP:
     BUFFERSIZE: int = 256
 
     @staticmethod
-    def send(source_ip: ip.IPv4Address, source_port: int, dest_ip: ip.IPv4Address, dest_port: int,
-             message: str) -> str | None:
+    def send(source_ip: Union[ip.IPv4Address, str], source_port: int,
+             dest_ip: Union[ip.IPv4Address, str], dest_port: int,
+             message: str) -> Union[str, None]:
+
+        if not isinstance(source_ip, (str, ip.IPv4Address)) or not isinstance(dest_ip, (str, ip.IPv4Address)):
+            raise ValueError("IP addresses should be of type str or ip.IPv4Address")
+
+        source_ip = str(source_ip) if isinstance(source_ip, ip.IPv4Address) else source_ip
+        dest_ip = str(dest_ip) if isinstance(dest_ip, ip.IPv4Address) else dest_ip
+
         try:
-            message = str_to_bytes(message)
+            ip.ip_address(source_ip)
+            ip.ip_address(dest_ip)
+        except ValueError as e:
+            raise ValueError(f"Invalid IP address: {e}")
+
+        if not isinstance(source_port, int) or not isinstance(dest_port, int):
+            raise ValueError("Ports should be integers")
+
+        try:
+            message_bytes = str_to_bytes(message)
         except UnicodeEncodeError as e:
-            raise e
+            raise ValueError(f"Message encoding failed: {e}")
 
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-            sock.bind((source_ip.compressed, source_port))
-            sock.settimeout(UDP.TIMEOUT)
-            sock.sendto(message, (dest_ip.compressed, dest_port))
             try:
-                response = sock.recv(UDP.BUFFERSIZE)
-            except socket.timeout:
-                response = None
-            finally:
-                sock.close()
+                sock.bind((source_ip, source_port))
+                sock.settimeout(UDP.TIMEOUT)
+                sock.sendto(message_bytes, (dest_ip, dest_port))
+                try:
+                    response = sock.recv(UDP.BUFFERSIZE)
+                    return bytes_to_ascii(response)
+                except socket.timeout:
+                    return None
+            except socket.error as e:
+                raise RuntimeError(f"Socket operation failed: {e}")
 
-        if response:
-            return bytes_to_ascii(response)
+        return None
