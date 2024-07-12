@@ -67,8 +67,10 @@ class TestUDP_API_ASCII(unittest.TestCase):
         self.local_port = 50000
         self.dest_ip = ip.ip_address("192.168.3.110")
         self.dest_port = 50000
-        self.args = (self.local_ip, self, self.local_port, self.dest_ip, self.dest_port)
+        self.args = (self.local_ip, self.local_port, self.dest_ip, self.dest_port)
         self.speed = 0.01
+
+        print(*self.args)
 
     def test_get_input_gain(self):
         response = UDP.send(*self.args, ASCII.get.input.gain(0))
