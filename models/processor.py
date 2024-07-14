@@ -68,7 +68,7 @@ class Processor(ABC):
 
 class ELTProcessor(Processor):
 
-    def __init__(self, ip_addr: ip.IPv4Address, port: int, inputs: int, outputs: int):
+    def __init__(self, ip_addr: ip.IPv4Address | str, port: int, inputs: int, outputs: int):
         """
         :param ip_addr: IPv4 address.
         :param port: Port number.
@@ -76,7 +76,7 @@ class ELTProcessor(Processor):
         :param outputs: Number of output channels.
         """
         super().__init__()
-        self._ip_addr: ip.IPv4Address = ip_addr
+        self._ip_addr: ip.IPv4Address = ip.ip_address(ip_addr)
         self._port: int = port
         self._system_mute: bool = False
         self._scenes: list[str] = [f"Preset {i}" for i in range(16)]

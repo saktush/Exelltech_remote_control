@@ -5,6 +5,7 @@ from types import FunctionType
 from typing import Type, List, Dict, Optional, Set
 from models.api import ASCII
 from models.system import UDP
+from config import LOCAL_IP, LOCAL_PORT
 
 
 def get_methods_from_class(cls: Type) -> List[str]:
@@ -63,11 +64,9 @@ def get_all_methods(module: str, root_class_name: str) -> Dict[str, List[str]]:
 
 class TestUDP_API_ASCII(unittest.TestCase):
     def setUp(self):
-        self.local_ip = ip.ip_address("192.168.3.100")
-        self.local_port = 50000
         self.dest_ip = ip.ip_address("192.168.3.110")
         self.dest_port = 50000
-        self.args = (self.local_ip, self.local_port, self.dest_ip, self.dest_port)
+        self.args = (LOCAL_IP, LOCAL_PORT, self.dest_ip, self.dest_port)
         self.speed = 0.01
 
         print(*self.args)
