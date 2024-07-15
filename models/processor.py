@@ -68,7 +68,9 @@ class Processor(ABC):
 
 class ELTProcessor(Processor):
 
-    def __init__(self, ip_addr: ip.IPv4Address | str, port: int, inputs: int, outputs: int):
+    def __init__(self, ip_addr: ip.IPv4Address | str, port: int,
+                 inputs: int, outputs: int,
+                 digital_from: Optional[int]):
         """
         :param ip_addr: IPv4 address.
         :param port: Port number.
@@ -80,8 +82,17 @@ class ELTProcessor(Processor):
         self._port: int = port
         self._system_mute: bool = False
         self._scenes: list[str] = [f"Preset {i}" for i in range(16)]
-        self._input: list[InputChannel] = [InputChannel(n) for n in range(inputs)]
-        self._output: list[OutputChannel] = [OutputChannel(n) for n in range(outputs)]
+        if inputs < 1 or outputs < 1:
+            raise ValueError(f"Inputs and outputs number should be positive int > 0, got {inputs}, {outputs}")
+        if digital_from:
+            self._input: list[InputChannel] = [InputChannel(n) for n in range(digital_from)]
+            self._input.extend([InputChannel(n, is_digital=True) for n in range(digital_from, inputs)])
+            self._output: list[OutputChannel] = [OutputChannel(n) for n in range(digital_from)]
+            self._output.extend([OutputChannel(n, is_digital=True) for n in range(digital_from, outputs)])
+        else:
+            self._input: list[InputChannel] = [InputChannel(n) for n in range(inputs)]
+            self._output: list[OutputChannel] = [OutputChannel(n) for n in range(outputs)]
+
         self._matrix: Matrix = Matrix(inputs, outputs)
 
     @property
