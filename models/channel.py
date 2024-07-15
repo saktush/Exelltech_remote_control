@@ -109,8 +109,8 @@ class InputChannel(Channel):
             raise ValueError("is_digital parameter must be a boolean")
 
         self._number = number
-        self._name = f'IN{number + 1}'
         self._is_digital: bool = is_digital
+        self._name = f'IN{number + 1}'
         self._mute = False
         self._phantom_power = False
         self._gain = 0.0
@@ -176,6 +176,14 @@ class InputChannel(Channel):
             raise ValueError("Phase must be a boolean.")
         self._phase = value
 
+    @property
+    def level(self) -> float:
+        return self._level
+
+    @level.setter
+    def level(self, value):
+        self._level = value
+
 
 class OutputChannel(Channel):
     def __init__(self, number: int, is_digital: bool = False, ) -> None:
@@ -209,3 +217,11 @@ class OutputChannel(Channel):
     @property
     def is_digital(self) -> bool:
         return self._is_digital
+
+    @property
+    def level(self) -> float:
+        return self._level
+
+    @level.setter
+    def level(self, value):
+        self._level = value
