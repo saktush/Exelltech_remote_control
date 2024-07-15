@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from models.channel import InputChannel, OutputChannel
 from models.matrix import Matrix
+from models.management import ChannelManager
 
 
 class Processor(ABC):
