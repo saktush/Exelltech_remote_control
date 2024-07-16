@@ -1,21 +1,25 @@
+import time
+import logging
 import ipaddress as ip
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 from models.channel import InputChannel, OutputChannel
 from models.matrix import Matrix
-from models.management import ChannelManager
+from models.api import ASCII as api
+from models.system import UDP
+from config import LOCAL_IP, LOCAL_PORT
 
 
 class Processor(ABC):
 
     def __init__(self):
-        self._ip_addr: ip.IPv4Address = None
-        self._port: int = None
-        self._system_mute: bool = None
-        self._scenes: list[str] = []
-        self._input: list[InputChannel] = []
-        self._output: list[OutputChannel] = []
-        self._matrix: Matrix = None
+        self._ip_addr: ip.IPv4Address = ...
+        self._port: int = ...
+        self._system_mute: bool = ...
+        self._scenes: list[str] = ...
+        self._input: list[InputChannel] = ...
+        self._output: list[OutputChannel] = ...
+        self._matrix: Matrix = ...
 
     @property
     @abstractmethod
@@ -66,6 +70,52 @@ class Processor(ABC):
     @abstractmethod
     def matrix(self) -> Matrix:
         pass
+
+
+class ChannelManager:
+    @staticmethod
+    def _send_and_parse(proc: Processor, command: str) -> Optional[str]:
+        try:
+            response = UDP.send(LOCAL_IP, LOCAL_PORT, proc.ip_addr, proc.port, command)
+            if response:
+                return response[len(command):]
+        except Exception as e:
+            logging.error(f"Error while sending command '{command}': {e}")
+        finally:
+            time.sleep(0.005)
+        return None
+
+    @staticmethod
+    def pull_input_channel_gain(proc: Processor, channel: InputChannel) -> Optional[float]:
+        command = api.get.input.gain(channel.number)
+        response_data = ChannelManager._send_and_parse(proc, command)
+        if response_data:
+            try:
+                return float(response_data.replace("#", ""))
+            except ValueError:
+                logging.error(f"Failed to parse gain value: {response_data}")
+                return None
+        return None
+
+    @staticmethod
+    def pull_input_channels_gain(proc: Processor) -> Optional[List[float]]:
+        command = api.get.input.gains(0, len(proc.input_channels))
+        response_data = ChannelManager._send_and_parse(proc, command)
+        if response_data:
+            try:
+                return [float(i) for i in response_data.split("#")[1:]]
+            except ValueError:
+                logging.error(f"Failed to parse gains values: {response_data}")
+                return None
+        return None
+
+    @staticmethod
+    def pull_input_channel_mute(proc: Processor, channel: InputChannel) -> bool | None:
+        ...
+
+    @staticmethod
+    def pull_input_channel_level(proc: Processor, channel: InputChannel) -> float | None:
+        ...
 
 
 class ELTProcessor(Processor):
