@@ -86,18 +86,6 @@ class ChannelManager:
         return None
 
     @staticmethod
-    def pull_input_channel_gain(proc: Processor, channel: InputChannel) -> Optional[float]:
-        command = api.get.input.gain(channel.number)
-        response_data = ChannelManager._send_and_parse(proc, command)
-        if response_data:
-            try:
-                return float(response_data.replace("#", ""))
-            except ValueError:
-                logging.error(f"Failed to parse gain value: {response_data}")
-                return None
-        return None
-
-    @staticmethod
     def pull_input_channels_gain(proc: Processor) -> Optional[List[float]]:
         command = api.get.input.gains(0, len(proc.input_channels))
         response_data = ChannelManager._send_and_parse(proc, command)
@@ -110,12 +98,64 @@ class ChannelManager:
         return None
 
     @staticmethod
-    def pull_input_channel_mute(proc: Processor, channel: InputChannel) -> bool | None:
-        ...
+    def pull_output_channels_gain(proc: Processor) -> Optional[List[float]]:
+        command = api.get.output.gains(0, len(proc.input_channels))
+        response_data = ChannelManager._send_and_parse(proc, command)
+        if response_data:
+            try:
+                return [float(i) for i in response_data.split("#")[1:]]
+            except ValueError:
+                logging.error(f"Failed to parse gains values: {response_data}")
+                return None
+        return None
 
     @staticmethod
-    def pull_input_channel_level(proc: Processor, channel: InputChannel) -> float | None:
-        ...
+    def pull_input_channels_mute(proc: Processor) -> Optional[List[bool]]:
+        command = api.get.input.mutes(0, len(proc.input_channels))
+        response_data = ChannelManager._send_and_parse(proc, command)
+        if response_data:
+            try:
+                return [bool(int(i)) for i in response_data.split("#")[1:]]
+            except ValueError:
+                logging.error(f"Failed to parse gains values: {response_data}")
+                return None
+        return None
+
+    @staticmethod
+    def pull_output_channels_mute(proc: Processor) -> Optional[List[bool]]:
+        command = api.get.output.mutes(0, len(proc.input_channels))
+        response_data = ChannelManager._send_and_parse(proc, command)
+        if response_data:
+            try:
+                return [bool(int(i)) for i in response_data.split("#")[1:]]
+            except ValueError:
+                logging.error(f"Failed to parse gains values: {response_data}")
+                return None
+        return None
+
+    @staticmethod
+    def pull_input_channels_level(proc: Processor) -> Optional[List[float]]:
+        command = api.get.input.levels(0, len(proc.input_channels))
+        response_data = ChannelManager._send_and_parse(proc, command)
+        if response_data:
+            try:
+                return [float(i) for i in response_data.split("#")[1:]]
+            except ValueError:
+                logging.error(f"Failed to parse gains values: {response_data}")
+                return None
+        return None
+
+    @staticmethod
+    def pull_output_channels_level(proc: Processor) -> Optional[List[float]]:
+        command = api.get.output.levels(0, len(proc.input_channels))
+        response_data = ChannelManager._send_and_parse(proc, command)
+        if response_data:
+            try:
+                return [float(i) for i in response_data.split("#")[1:]]
+            except ValueError:
+                logging.error(f"Failed to parse gains values: {response_data}")
+                return None
+        return None
 
 
 class ELTProcessor(Processor):
@@ -191,26 +231,32 @@ class ELTProcessor(Processor):
     def matrix(self) -> Matrix:
         return self._matrix
 
-    def pull_input_channels(self) -> None:
-        input_gains: list[float] = self.__mgmt.pull_input_channels_gain(self)
-        # print(input_gains)
-        for i_ch in self.input_channels:
-            i_ch.gain = input_gains[i_ch.number]
+    def pull_channels(self) -> None:
+        input_gains: List[float] = self.__mgmt.pull_input_channels_gain(self)
+        output_gains: List[float] = self.__mgmt.pull_output_channels_gain(self)
+        input_mutes: List[bool] = self.__mgmt.pull_input_channels_mute(self)
+        output_mutes: List[bool] = self.__mgmt.pull_output_channels_mute(self)
+        input_levels: List[float] = self.__mgmt.pull_input_channels_level(self)
+        output_levels: List[float] = self.__mgmt.pull_output_channels_level(self)
 
-    #     # self.input_channels[number].mute = ...
-    #     # self.input_channels[number].level = ...
-    #     # self.input_channels[number].source = ...
-    #     # self.input_channels[number].phase = ...
-    #     # self.input_channels[number].name = ...
-    #     # self.input_channels[number].link = ...
-    #
-    # def pull_output_channel(self, number: int) -> None:
-    #     self.output_channels[number].mute = ...
-    #     self.output_channels[number].gain = ...
-    #     self.output_channels[number].level = ...
-    #     self.output_channels[number].name = ...
-    #     self.output_channels[number].gain = ...
-    #
-    # def pull_matrix(self, number: int) -> None:
-    #     self.matrix.routes = ...
-    #     self.matrix.gains = ...
+        # [Optional] Add more data to channel
+        # self.input_channels[number].source = ...
+        # self.input_channels[number].phase = ...
+        # self.input_channels[number].name = ...
+        # self.input_channels[number].link = ...
+
+        for i_ch in self.input_channels:
+            if input_gains:
+                i_ch.gain = input_gains[i_ch.number]
+            if input_mutes:
+                i_ch.mute = input_mutes[i_ch.number]
+            if input_levels:
+                i_ch.level = input_levels[i_ch.number]
+
+        for o_ch in self.output_channels:
+            if output_gains:
+                o_ch.gain = output_gains[o_ch.number]
+            if output_mutes:
+                o_ch.mutes = output_mutes[o_ch.number]
+            if output_levels:
+                o_ch.level = input_levels[o_ch.number]
