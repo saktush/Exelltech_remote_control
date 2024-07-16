@@ -71,7 +71,7 @@ class TestUDP_API_ASCII(unittest.TestCase):
         self.speed = 0.01
 
     def tearDown(self):
-        time.sleep(0.25)
+        time.sleep(0.005)
 
     def test_get_input_gain(self):
         command: str = ASCII.get.input.gain(0)
@@ -608,4 +608,4 @@ class TestUDP_API_ASCII(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(verbosity=3)
+    unittest.main(verbosity=2)
