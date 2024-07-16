@@ -120,6 +120,21 @@ class InputChannel(Channel):
         self._source: Literal["input", "generator"] = "input"
         self._phase: bool = False
 
+    def __repr__(self):
+        return (
+            f"InputChannel(number={self._number:02}, "
+            f"is_digital={self._is_digital}, "
+            f"name='{self._name}', "
+            f"mute={self._mute}, "
+            f"phantom_power={self._phantom_power}, "
+            f"gain={self._gain}, "
+            f"link={self._link}, "
+            f"level={self._level}, "
+            f"sensitivity={self._sensitivity}, "
+            f"source='{self._source}', "
+            f"phase={self._phase})"
+        )
+
     @property
     def source(self) -> str:
         return self._source
@@ -203,6 +218,18 @@ class OutputChannel(Channel):
         self._link = False
         self._level = self.MIN_LEVEL
         self._phase: bool = False
+
+    def __repr__(self):
+        return (
+            f"InputChannel(number={self._number:02}, "
+            f"is_digital={self._is_digital}, "
+            f"name='{self._name}', "
+            f"mute={self._mute}, "
+            f"gain={self._gain}, "
+            f"link={self._link}, "
+            f"level={self._level}, "
+            f"phase={self._phase})"
+        )
 
     @property
     def phase(self) -> bool:
