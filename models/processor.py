@@ -36,6 +36,9 @@ class ELTProcessor(Processor):
 
         self._matrix: Matrix = Matrix(inputs, outputs)
 
+    def __repr__(self):
+        pass
+
     @property
     def ip_addr(self) -> ip.IPv4Address:
         return self._ip_addr

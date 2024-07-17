@@ -12,7 +12,7 @@ class TestELTProcessor(unittest.TestCase):
         self.port = 8080
         self.inputs = 4
         self.outputs = 4
-        self.processor = ELTProcessor(self.ip_addr, self.port, self.inputs, self.outputs)
+        self.processor = ELTProcessor(self.ip_addr, self.port, self.inputs, self.outputs, 2)
 
     def test_initialization(self):
         self.assertEqual(self.processor.ip_addr, self.ip_addr)
