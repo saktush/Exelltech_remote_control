@@ -1,8 +1,7 @@
-from abc import ABC, abstractmethod
-from typing import List, Tuple
+from typing import List
 
 
-class Matrix(ABC):
+class Matrix:
     MIN_GAIN = -120
     MAX_GAIN = 0
 
@@ -87,8 +86,9 @@ class Matrix(ABC):
             raise ValueError(f"Row and column indices must be between 0 and input/output channels.")
         return self._matrix_gains[row][col]
 
-    def __str__(self) -> str:
-        description = f"Matrix with {self._input_channels} input channels and {self._output_channels} output channels:\n"
+    def __repr__(self) -> str:
+        description = (f"Matrix with {self._input_channels} input channels "
+                       f"and {self._output_channels} output channels:\n")
         for i in range(self._input_channels):
             line = f"[Input Channel {i + 1}] "
             for j in range(self._output_channels):
