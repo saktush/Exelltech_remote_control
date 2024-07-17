@@ -1,6 +1,5 @@
 import ipaddress as ip
 from abc import ABC, abstractmethod
-from models.channel import InputChannel, OutputChannel
 from models.matrix import Matrix
 
 
@@ -32,13 +31,19 @@ class Channel(ABC):
     MIN_LEVEL = -160
     MAX_LEVEL = 0
 
+    @abstractmethod
     def __init__(self) -> None:
-        self._number = 0
-        self._name = ''
-        self._mute = False
-        self._gain = 0.0
-        self._link = False
-        self._level: float = self.MIN_LEVEL
+        self._number = ...
+        self._name = ...
+        self._mute = ...
+        self._gain = ...
+        self._link = ...
+        self._level: float = ...
+
+    @abstractmethod
+    def __repr__(self) -> str:
+        return (f"Channel {self.number}: {self.name} - Mute: {self.mute}, "
+                f"Gain: {self.gain}, Linked: {self.link}, Level: {self.level}")
 
     @property
     def number(self) -> int:
@@ -95,21 +100,22 @@ class Channel(ABC):
     def level(self) -> float:
         return self._level
 
-    def __str__(self) -> str:
-        return (f"Channel {self.number}: {self.name} - Mute: {self.mute}, "
-                f"Gain: {self.gain}, Linked: {self.link}, Level: {self.level}")
-
 
 class Processor(ABC):
 
+    @abstractmethod
     def __init__(self):
         self._ip_addr: ip.IPv4Address = ...
         self._port: int = ...
         self._system_mute: bool = ...
         self._scenes: list[str] = ...
-        self._input: list[InputChannel] = ...
-        self._output: list[OutputChannel] = ...
+        self._input: list[Channel] = ...
+        self._output: list[Channel] = ...
         self._matrix: Matrix = ...
+
+    @abstractmethod
+    def __repr__(self):
+        pass
 
     @property
     @abstractmethod
@@ -148,12 +154,12 @@ class Processor(ABC):
 
     @property
     @abstractmethod
-    def input_channels(self) -> list[InputChannel]:
+    def input_channels(self) -> list[Channel]:
         pass
 
     @property
     @abstractmethod
-    def output_channels(self) -> list[OutputChannel]:
+    def output_channels(self) -> list[Channel]:
         pass
 
     @property

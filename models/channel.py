@@ -1,10 +1,11 @@
+from abc import ABC
+
 from models.abstract import Channel
 from typing import Literal
 
 
 class InputChannel(Channel):
     def __init__(self, number: int, is_digital: bool = False) -> None:
-        super().__init__()
         if not isinstance(number, int):
             raise ValueError("Number must be an integer.")
         if not 0 <= number <= 63:
@@ -106,7 +107,6 @@ class InputChannel(Channel):
 
 class OutputChannel(Channel):
     def __init__(self, number: int, is_digital: bool = False, ) -> None:
-        super().__init__()
         if not isinstance(number, int):
             raise ValueError("Number must be an integer.")
         if not 0 <= number <= 63:
