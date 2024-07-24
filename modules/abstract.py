@@ -1,6 +1,6 @@
 import ipaddress as ip
 from abc import ABC, abstractmethod
-from models.matrix import Matrix
+from modules.matrix import Matrix
 
 
 class Channel(ABC):

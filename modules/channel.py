@@ -1,6 +1,6 @@
 from abc import ABC
 
-from models.abstract import Channel
+from modules.abstract import Channel
 from typing import Literal
 
 

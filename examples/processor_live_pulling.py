@@ -1,7 +1,7 @@
 import os
 import platform
 
-from models.processor import ELTProcessor
+from modules.processor import ELTProcessor
 
 
 def clear():

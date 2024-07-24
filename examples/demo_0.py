@@ -1,6 +1,6 @@
 import time
-from models.api import ASCII
-from models.system import UDP
+from modules.api import ASCII
+from modules.system import UDP
 import ipaddress as ip
 
 local_ip = ip.ip_address("192.168.3.100")

@@ -3,8 +3,8 @@ import time
 import unittest
 from types import FunctionType
 from typing import Type, List, Dict, Optional, Set
-from models.api import ASCII
-from models.system import UDP
+from modules.api import ASCII
+from modules.system import UDP
 from config import LOCAL_IP, LOCAL_PORT, REMOTE_IP, REMOTE_PORT
 
 """
@@ -55,7 +55,7 @@ def get_all_methods(module: str, root_class_name: str) -> Dict[str, List[str]]:
     """
     Retrieve all methods from the specified module's root class and its nested classes.
 
-    :usage: methods = get_all_methods('models', 'api')
+    :usage: methods = get_all_methods('modules', 'api')
 
     :param module: The module name where the root class is defined.
     :param root_class_name: The name of the root class to analyze.

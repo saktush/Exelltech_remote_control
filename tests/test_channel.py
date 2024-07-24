@@ -1,5 +1,5 @@
 import unittest
-from models.channel import Channel, InputChannel, OutputChannel
+from modules.channel import Channel, InputChannel, OutputChannel
 
 
 class TestInputChannel(unittest.TestCase):

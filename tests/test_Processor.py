@@ -1,8 +1,8 @@
 import unittest
 import ipaddress
-from models.channel import InputChannel, OutputChannel
-from models.matrix import Matrix
-from models.processor import ELTProcessor
+from modules.channel import InputChannel, OutputChannel
+from modules.matrix import Matrix
+from modules.processor import ELTProcessor
 
 
 class TestELTProcessor(unittest.TestCase):

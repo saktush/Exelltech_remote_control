@@ -1,7 +1,7 @@
 import socket
 import unittest
 from unittest.mock import patch, MagicMock
-from models.system import UDP
+from modules.system import UDP
 import ipaddress as ip
 
 

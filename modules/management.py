@@ -2,9 +2,9 @@ import logging
 import time
 from typing import Optional, List
 from config import LOCAL_IP, LOCAL_PORT
-from models.api import ASCII as api
-from models.abstract import Processor
-from models.system import UDP
+from modules.api import ASCII as api
+from modules.abstract import Processor
+from modules.system import UDP
 
 
 class ChannelManager:

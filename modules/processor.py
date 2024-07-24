@@ -1,9 +1,9 @@
 import ipaddress as ip
 from typing import Optional, List
-from models.channel import InputChannel, OutputChannel
-from models.matrix import Matrix
-from models.abstract import Processor
-from models.management import ChannelManager
+from modules.channel import InputChannel, OutputChannel
+from modules.matrix import Matrix
+from modules.abstract import Processor
+from modules.management import ChannelManager
 
 
 class ELTProcessor(Processor):
