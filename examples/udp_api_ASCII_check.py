@@ -1,12 +1,15 @@
 import inspect
 import time
 import unittest
-import ipaddress as ip
 from types import FunctionType
 from typing import Type, List, Dict, Optional, Set
 from models.api import ASCII
 from models.system import UDP
-from config import LOCAL_IP, LOCAL_PORT
+from config import LOCAL_IP, LOCAL_PORT, REMOTE_IP, REMOTE_PORT
+
+"""
+! Don't forget to check /config.py for IP and Port settings
+"""
 
 
 def get_methods_from_class(cls: Type) -> List[str]:
@@ -65,13 +68,13 @@ def get_all_methods(module: str, root_class_name: str) -> Dict[str, List[str]]:
 
 class TestUDP_API_ASCII(unittest.TestCase):
     def setUp(self):
-        self.dest_ip = ip.ip_address("192.168.3.110")
-        self.dest_port = 50000
+        self.dest_ip = REMOTE_IP
+        self.dest_port = REMOTE_PORT
         self.args = (LOCAL_IP, LOCAL_PORT, self.dest_ip, self.dest_port)
         self.speed = 0.01
 
     def tearDown(self):
-        time.sleep(0.005)
+        time.sleep(self.speed)
 
     def test_get_input_gain(self):
         command: str = ASCII.get.input.gain(0)
