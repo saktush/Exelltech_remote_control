@@ -14,7 +14,7 @@ class Matrix:
         self._input_channels = input_channels
         self._output_channels = output_channels
         self._matrix_routes = [[False for _ in range(output_channels)] for _ in range(input_channels)]
-        self._matrix_gains = [[-120.0 for _ in range(output_channels)] for _ in range(input_channels)]
+        self._matrix_gains = [[0 for _ in range(output_channels)] for _ in range(input_channels)]
 
     @property
     def inputs(self) -> int:
