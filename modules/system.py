@@ -11,7 +11,7 @@ def bytes_to_ascii(b_string: bytes) -> str:
     return b_string.decode('ascii')
 
 
-def str_to_bytes(message: str) -> bytes:
+def ascii_to_bytes(message: str) -> bytes:
     return message.encode("ascii")
 
 
@@ -30,6 +30,7 @@ def ping_server(server: str, port: int, timeout=3):
     else:
         s.close()
         return True
+
 
 class UDP:
     """
@@ -80,7 +81,7 @@ class UDP:
             raise ValueError("Ports should be integers")
 
         try:
-            message_bytes = str_to_bytes(message)
+            message_bytes = ascii_to_bytes(message)
         except UnicodeEncodeError as e:
             raise ValueError(f"Message encoding failed: {e}")
 
