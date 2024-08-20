@@ -3,7 +3,7 @@ from typing import Optional, List
 from modules.channel import InputChannel, OutputChannel
 from modules.matrix import Matrix
 from modules.abstract import Processor
-from modules.management import ChannelManager
+from modules.driver import Driver
 
 
 class ELTProcessor(Processor):
@@ -22,7 +22,7 @@ class ELTProcessor(Processor):
         self._port: int = port
         self._system_mute: bool = False
         self._scenes: list[str] = [f"Preset {i}" for i in range(16)]
-        self.__mgmt = ChannelManager()
+        self.__driver = Driver()
         if inputs < 1 or outputs < 1:
             raise ValueError(f"Inputs and outputs number should be positive int > 0, got {inputs}, {outputs}")
         if digital_from:
@@ -83,12 +83,12 @@ class ELTProcessor(Processor):
         return self._matrix
 
     def pull_channels(self) -> None:
-        input_gains: List[float] = self.__mgmt.pull_input_channels_gain(self)
-        output_gains: List[float] = self.__mgmt.pull_output_channels_gain(self)
-        input_mutes: List[bool] = self.__mgmt.pull_input_channels_mute(self)
-        output_mutes: List[bool] = self.__mgmt.pull_output_channels_mute(self)
-        input_levels: List[float] = self.__mgmt.pull_input_channels_level(self)
-        output_levels: List[float] = self.__mgmt.pull_output_channels_level(self)
+        input_gains: List[float] = self.__driver.pull_input_channels_gain(self)
+        output_gains: List[float] = self.__driver.pull_output_channels_gain(self)
+        input_mutes: List[bool] = self.__driver.pull_input_channels_mute(self)
+        output_mutes: List[bool] = self.__driver.pull_output_channels_mute(self)
+        input_levels: List[float] = self.__driver.pull_input_channels_level(self)
+        output_levels: List[float] = self.__driver.pull_output_channels_level(self)
 
         # [Optional] Add more data to channel
         # self.input_channels[number].source = ...
@@ -96,6 +96,7 @@ class ELTProcessor(Processor):
         # self.input_channels[number].name = ...
         # self.input_channels[number].link = ...
 
+        # TODO: check if channel numbers given correctly
         for i_ch in self.input_channels:
             if input_gains:
                 i_ch.gain = input_gains[i_ch.number]
@@ -111,3 +112,10 @@ class ELTProcessor(Processor):
                 o_ch.mutes = output_mutes[o_ch.number]
             if output_levels:
                 o_ch.level = input_levels[o_ch.number]
+
+    def pull_matrix(self) -> None:
+        ...
+
+    def push_matrix(self) -> None:
+        ...
+

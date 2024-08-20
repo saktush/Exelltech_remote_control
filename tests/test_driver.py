@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from modules.system import UDP
 from modules.abstract import Processor
-from modules.management import ChannelManager
+from modules.driver import Driver
 from config import LOCAL_IP, LOCAL_PORT
 
 
@@ -24,7 +24,7 @@ class TestChannelManager(unittest.TestCase):
     def test_pull_input_channels_gain(self, mock_udp_send, mock_get_input_gains):
         with patch('config.LOCAL_IP', new=self.expected_local_ip), patch('config.LOCAL_PORT',
                                                                          new=self.expected_local_port):
-            result = ChannelManager.pull_input_channels_gain(self.proc)
+            result = Driver.pull_input_channels_gain(self.proc)
 
         self.assertEqual(result, [1.0, 2.0, 3.0])
         mock_udp_send.assert_called_with(self.expected_local_ip, self.expected_local_port, self.proc.ip_addr,
@@ -35,7 +35,7 @@ class TestChannelManager(unittest.TestCase):
     def test_pull_output_channels_gain(self, mock_udp_send, mock_get_output_gains):
         with patch('config.LOCAL_IP', new=self.expected_local_ip), patch('config.LOCAL_PORT',
                                                                          new=self.expected_local_port):
-            result = ChannelManager.pull_output_channels_gain(self.proc)
+            result = Driver.pull_output_channels_gain(self.proc)
 
         self.assertEqual(result, [4.0, 5.0, 6.0])
         mock_udp_send.assert_called_with(self.expected_local_ip, self.expected_local_port, self.proc.ip_addr,
@@ -46,7 +46,7 @@ class TestChannelManager(unittest.TestCase):
     def test_pull_input_channels_mute(self, mock_udp_send, mock_get_input_mutes):
         with patch('config.LOCAL_IP', new=self.expected_local_ip), patch('config.LOCAL_PORT',
                                                                          new=self.expected_local_port):
-            result = ChannelManager.pull_input_channels_mute(self.proc)
+            result = Driver.pull_input_channels_mute(self.proc)
 
         self.assertEqual(result, [True, False, True])
         mock_udp_send.assert_called_with(self.expected_local_ip, self.expected_local_port, self.proc.ip_addr,
@@ -57,7 +57,7 @@ class TestChannelManager(unittest.TestCase):
     def test_pull_output_channels_mute(self, mock_udp_send, mock_get_output_mutes):
         with patch('config.LOCAL_IP', new=self.expected_local_ip), patch('config.LOCAL_PORT',
                                                                          new=self.expected_local_port):
-            result = ChannelManager.pull_output_channels_mute(self.proc)
+            result = Driver.pull_output_channels_mute(self.proc)
 
         self.assertEqual(result, [False, False, True])
         mock_udp_send.assert_called_with(self.expected_local_ip, self.expected_local_port, self.proc.ip_addr,
@@ -68,7 +68,7 @@ class TestChannelManager(unittest.TestCase):
     def test_pull_input_channels_level(self, mock_udp_send, mock_get_input_levels):
         with patch('config.LOCAL_IP', new=self.expected_local_ip), patch('config.LOCAL_PORT',
                                                                          new=self.expected_local_port):
-            result = ChannelManager.pull_input_channels_level(self.proc)
+            result = Driver.pull_input_channels_level(self.proc)
 
         self.assertEqual(result, [10.0, 20.0, 30.0])
         mock_udp_send.assert_called_with(self.expected_local_ip, self.expected_local_port, self.proc.ip_addr,
@@ -79,7 +79,7 @@ class TestChannelManager(unittest.TestCase):
     def test_pull_output_channels_level(self, mock_udp_send, mock_get_output_levels):
         with patch('config.LOCAL_IP', new=self.expected_local_ip), patch('config.LOCAL_PORT',
                                                                          new=self.expected_local_port):
-            result = ChannelManager.pull_output_channels_level(self.proc)
+            result = Driver.pull_output_channels_level(self.proc)
 
         self.assertEqual(result, [15.0, 25.0, 35.0])
         mock_udp_send.assert_called_with(self.expected_local_ip, self.expected_local_port, self.proc.ip_addr,
@@ -96,7 +96,7 @@ class TestChannelManager(unittest.TestCase):
 
         with patch('config.LOCAL_IP', new=self.expected_local_ip), patch('config.LOCAL_PORT',
                                                                          new=self.expected_local_port):
-            ChannelManager.pull_matrix_switches(self.proc)
+            Driver.pull_matrix_switches(self.proc)
 
         # Assert the expected interactions with the mock matrix routes
         expected_calls = [
@@ -113,7 +113,7 @@ class TestChannelManager(unittest.TestCase):
 
         with patch('config.LOCAL_IP', new=self.expected_local_ip), patch('config.LOCAL_PORT',
                                                                          new=self.expected_local_port):
-            result = ChannelManager.push_matrix_switches(self.proc)
+            result = Driver.push_matrix_switches(self.proc)
 
         self.assertTrue(result)
 
