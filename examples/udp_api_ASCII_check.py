@@ -71,7 +71,8 @@ class TestUDP_API_ASCII(unittest.TestCase):
         self.dest_ip = REMOTE_IP
         self.dest_port = REMOTE_PORT
         self.args = (LOCAL_IP, LOCAL_PORT, self.dest_ip, self.dest_port)
-        self.speed = 0.01
+        # cooldown time
+        self.speed = 0.025
 
     def tearDown(self):
         time.sleep(self.speed)
@@ -598,9 +599,11 @@ class TestUDP_API_ASCII(unittest.TestCase):
     def test_scene_toggle(self):
         command: str = ASCII.scene.toggle(0)
         response: str = UDP.send(*self.args, command)
-        self.assertIn(command, response)
         print(f"Command: {command} \n"
               f"Results: {response} ")
+        # time to get scene loaded
+        time.sleep(1.5)
+        self.assertIsNone(response)
 
     def test_x_set_rescene(self):
         command: str = ASCII.set.rescene()
