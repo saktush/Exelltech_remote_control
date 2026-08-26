@@ -1,4 +1,13 @@
-from typing import Literal, AnyStr, Annotated
+from typing import Literal
+
+from .enums import SwitchState
+
+State = Literal[0, 1] | SwitchState
+
+
+def _validate_channel_number(number: int, max_number: int = 63) -> None:
+    if not isinstance(number, int) or not (0 <= number <= max_number):
+        raise ValueError(f"Channel number must be between 0 and {max_number}, got {number}")
 
 
 class ASCII:
@@ -52,10 +61,13 @@ class ASCII:
 
         - sysctl: Contains system control commands like mute.
         - scene: Includes commands for fetching scene names and ranges.
-        - input: Provides commands for retrieving input parameters like gain, phantom power, mute, sensitivity, phase, link, type, level, and name.
+        - input: Provides commands for retrieving input parameters like gain, phantom power, mute, sensitivity,
+          phase, link, type, level, and name.
         - output: Contains commands for fetching output parameters like gain, mute, phase, link, level, and name.
-        - mixer: Includes commands for retrieving mixer parameters like switch and gain, both for specific rows and ranges.
+        - mixer: Includes commands for retrieving mixer parameters like switch and gain, both for specific rows
+          and ranges.
         """
+
         class sysctl:
             @staticmethod
             def mute() -> str:
@@ -64,8 +76,7 @@ class ASCII:
         class scene:
             @staticmethod
             def name(number: int) -> str:
-                if number > 15:
-                    raise ValueError("Scene number should be 0 to 15")
+                _validate_channel_number(number, max_number=15)
                 return f"get:scene#name#{number}"
 
             @staticmethod
@@ -79,6 +90,7 @@ class ASCII:
         class input:
             @staticmethod
             def gain(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#gain#{number}"
 
             @staticmethod
@@ -89,6 +101,7 @@ class ASCII:
 
             @staticmethod
             def phantom(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#phant#{number}"
 
             @staticmethod
@@ -99,6 +112,7 @@ class ASCII:
 
             @staticmethod
             def mute(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#mute#{number}"
 
             @staticmethod
@@ -109,6 +123,7 @@ class ASCII:
 
             @staticmethod
             def sensitivity(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#sens#{number}"
 
             @staticmethod
@@ -119,6 +134,7 @@ class ASCII:
 
             @staticmethod
             def phase(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#phase#{number}"
 
             @staticmethod
@@ -129,6 +145,7 @@ class ASCII:
 
             @staticmethod
             def link(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#link#{number}"
 
             @staticmethod
@@ -139,6 +156,7 @@ class ASCII:
 
             @staticmethod
             def type(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#type#{number}"
 
             @staticmethod
@@ -149,6 +167,7 @@ class ASCII:
 
             @staticmethod
             def level(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#level#{number}"
 
             @staticmethod
@@ -159,6 +178,7 @@ class ASCII:
 
             @staticmethod
             def name(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:input#name#{number}"
 
             @staticmethod
@@ -170,6 +190,7 @@ class ASCII:
         class output:
             @staticmethod
             def gain(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:output#gain#{number}"
 
             @staticmethod
@@ -180,6 +201,7 @@ class ASCII:
 
             @staticmethod
             def mute(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:output#mute#{number}"
 
             @staticmethod
@@ -190,6 +212,7 @@ class ASCII:
 
             @staticmethod
             def phase(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:output#phase#{number}"
 
             @staticmethod
@@ -200,6 +223,7 @@ class ASCII:
 
             @staticmethod
             def link(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:output#link#{number}"
 
             @staticmethod
@@ -210,6 +234,7 @@ class ASCII:
 
             @staticmethod
             def level(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:output#level#{number}"
 
             @staticmethod
@@ -220,6 +245,7 @@ class ASCII:
 
             @staticmethod
             def name(number: int) -> str:
+                _validate_channel_number(number)
                 return f"get:output#name#{number}"
 
             @staticmethod
@@ -231,6 +257,8 @@ class ASCII:
         class mixer:
             @staticmethod
             def switch(row: int, col: int) -> str:
+                _validate_channel_number(row)
+                _validate_channel_number(col)
                 return f"get:mixer#switch#{row}#{col}"
 
             @staticmethod
@@ -247,6 +275,8 @@ class ASCII:
 
             @staticmethod
             def gain(row: int, col: int) -> str:
+                _validate_channel_number(row)
+                _validate_channel_number(col)
                 return f"get:mixer#gain#{row}#{col}"
 
             @staticmethod
@@ -274,23 +304,25 @@ class ASCII:
 
         - sysctl: Contains system control commands such as mute.
         - scene: Includes commands for setting scene names and ranges.
-        - input: Provides commands for setting input parameters like gain, phantom power, mute, sensitivity, phase, link, type, and name.
+        - input: Provides commands for setting input parameters like gain, phantom power, mute, sensitivity,
+          phase, link, type, and name.
         - output: Contains commands for setting output parameters like gain, mute, phase, link, and name.
         - mixer: Includes commands for setting mixer parameters like switch and gain, both for specific rows and ranges.
         """
+
         @staticmethod
-        def rescene():
+        def rescene() -> str:
             """!!! Clears all scene data"""
             return "set:rescene"
 
         @staticmethod
-        def refactory():
+        def refactory() -> str:
             """!!! Factory reset, including ip address and other settings"""
             return "set:refactory"
 
         class sysctl:
             @staticmethod
-            def mute(state: Literal[0, 1]) -> str:
+            def mute(state: State) -> str:
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:sysctl#mute#{state}"
@@ -298,6 +330,7 @@ class ASCII:
         class scene:
             @staticmethod
             def name(number: int, name: str) -> str:
+                _validate_channel_number(number, max_number=15)
                 if len(name) > 15:
                     raise ValueError("Name should be 15 symbols maximum")
                 if not name.isascii():
@@ -318,6 +351,7 @@ class ASCII:
             @staticmethod
             def gain(number: int, value: float) -> str:
                 """Value should be from -72 to 12"""
+                _validate_channel_number(number)
                 if not (-72 <= value <= 12):
                     raise ValueError("Gain parameter should be from -72 to 12")
                 value = round(value, 2)
@@ -334,13 +368,14 @@ class ASCII:
                 return f"set:input#gain#{start}-{end}#{value}"
 
             @staticmethod
-            def phantom(number: int, state: Literal[0, 1]) -> str:
+            def phantom(number: int, state: State) -> str:
+                _validate_channel_number(number)
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#phant#{number}#{state}"
 
             @staticmethod
-            def phantoms(start: int, end: int, state: Literal[0, 1]) -> str:
+            def phantoms(start: int, end: int, state: State) -> str:
                 if start >= end:
                     raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
@@ -348,13 +383,14 @@ class ASCII:
                 return f"set:input#phant#{start}-{end}#{state}"
 
             @staticmethod
-            def mute(number: int, state: Literal[0, 1]) -> str:
+            def mute(number: int, state: State) -> str:
+                _validate_channel_number(number)
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#mute#{number}#{state}"
 
             @staticmethod
-            def mutes(start: int, end: int, state: Literal[0, 1]) -> str:
+            def mutes(start: int, end: int, state: State) -> str:
                 if start >= end:
                     raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
@@ -364,6 +400,7 @@ class ASCII:
             @staticmethod
             def sensitivity(number: int, value: int) -> str:
                 """Value is expected to be between 0 and 15"""
+                _validate_channel_number(number)
                 if not (0 <= value <= 15):
                     raise ValueError("Value must be between 0 and 15")
                 return f"set:input#sens#{number}#{value}"
@@ -378,13 +415,14 @@ class ASCII:
                 return f"set:input#sens#{start}-{end}#{value}"
 
             @staticmethod
-            def phase(number: int, state: Literal[0, 1]) -> str:
+            def phase(number: int, state: State) -> str:
+                _validate_channel_number(number)
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#phase#{number}#{state}"
 
             @staticmethod
-            def phases(start: int, end: int, state: Literal[0, 1]) -> str:
+            def phases(start: int, end: int, state: State) -> str:
                 if start >= end:
                     raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
@@ -392,17 +430,18 @@ class ASCII:
                 return f"set:input#phase#{start}-{end}#{state}"
 
             @staticmethod
-            def link(number: int, state: Literal[0, 1]) -> str:
+            def link(number: int, state: State) -> str:
                 """
                 Link affects odd to even both channels,
                 if call  .link(number=0, state=1) -> it will also affect channel(1)
                 """
+                _validate_channel_number(number)
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:input#link#{number}#{state}"
 
             @staticmethod
-            def links(start: int, end: int, state: Literal[0, 1]) -> str:
+            def links(start: int, end: int, state: State) -> str:
                 if start >= end:
                     raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
@@ -410,13 +449,14 @@ class ASCII:
                 return f"set:input#link#{start}-{end}#{state}"
 
             @staticmethod
-            def type(number: int, value: Literal[0, 1]) -> str:
+            def type(number: int, value: State) -> str:
+                _validate_channel_number(number)
                 if value not in (0, 1):
                     raise ValueError("Value must be 0 or 1")
                 return f"set:input#type#{number}#{value}"
 
             @staticmethod
-            def types(start: int, end: int, value: Literal[0, 1]) -> str:
+            def types(start: int, end: int, value: State) -> str:
                 if start >= end:
                     raise ValueError("Start argument should be lower than End")
                 if value not in (0, 1):
@@ -426,6 +466,7 @@ class ASCII:
             @staticmethod
             def name(number: int, name: str) -> str:
                 """Name should be ASCII, max 15 symbols"""
+                _validate_channel_number(number)
                 if len(name) > 15:
                     raise ValueError("Name should be 15 symbols maximum")
                 if not name.isascii():
@@ -448,6 +489,7 @@ class ASCII:
             @staticmethod
             def gain(number: int, value: float) -> str:
                 """Value should be from -72 to 12"""
+                _validate_channel_number(number)
                 if not (-72 <= value <= 12):
                     raise ValueError("Gain parameter should be from -72 to 12")
                 value = round(value, 2)
@@ -464,13 +506,14 @@ class ASCII:
                 return f"set:output#gain#{start}-{end}#{value}"
 
             @staticmethod
-            def mute(number: int, state: Literal[0, 1]) -> str:
+            def mute(number: int, state: State) -> str:
+                _validate_channel_number(number)
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#mute#{number}#{state}"
 
             @staticmethod
-            def mutes(start: int, end: int, state: Literal[0, 1]) -> str:
+            def mutes(start: int, end: int, state: State) -> str:
                 if start >= end:
                     raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
@@ -478,13 +521,14 @@ class ASCII:
                 return f"set:output#mute#{start}-{end}#{state}"
 
             @staticmethod
-            def phase(number: int, state: Literal[0, 1]) -> str:
+            def phase(number: int, state: State) -> str:
+                _validate_channel_number(number)
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#phase#{number}#{state}"
 
             @staticmethod
-            def phases(start: int, end: int, state: Literal[0, 1]) -> str:
+            def phases(start: int, end: int, state: State) -> str:
                 if start >= end:
                     raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
@@ -492,13 +536,14 @@ class ASCII:
                 return f"set:output#phase#{start}-{end}#{state}"
 
             @staticmethod
-            def link(number: int, state: Literal[0, 1]) -> str:
+            def link(number: int, state: State) -> str:
+                _validate_channel_number(number)
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:output#link#{number}#{state}"
 
             @staticmethod
-            def links(start: int, end: int, state: Literal[0, 1]) -> str:
+            def links(start: int, end: int, state: State) -> str:
                 if start >= end:
                     raise ValueError("Start argument should be lower than End")
                 if state not in (0, 1):
@@ -507,6 +552,7 @@ class ASCII:
 
             @staticmethod
             def name(number: int, name: str) -> str:
+                _validate_channel_number(number)
                 if len(name) > 15:
                     raise ValueError("Name should be 15 symbols maximum")
                 if not name.isascii():
@@ -527,13 +573,15 @@ class ASCII:
 
         class mixer:
             @staticmethod
-            def switch(row: int, col: int, state: Literal[0, 1]) -> str:
+            def switch(row: int, col: int, state: State) -> str:
+                _validate_channel_number(row)
+                _validate_channel_number(col)
                 if state not in (0, 1):
                     raise ValueError("State must be 0 (off) or 1 (on)")
                 return f"set:mixer#switch#{row}#{col}#{state}"
 
             @staticmethod
-            def switch_vertical(row: int, col_range: tuple[int, int], state: Literal[0, 1]) -> str:
+            def switch_vertical(row: int, col_range: tuple[int, int], state: State) -> str:
                 if col_range[0] >= col_range[1]:
                     raise ValueError("col_range should have the first int lower than the second int")
                 if state not in (0, 1):
@@ -541,7 +589,7 @@ class ASCII:
                 return f"set:mixer#switch#{row}#{col_range[0]}-{col_range[1]}#{state}"
 
             @staticmethod
-            def switch_horizontal(row_range: tuple[int, int], col: int, state: Literal[0, 1]) -> str:
+            def switch_horizontal(row_range: tuple[int, int], col: int, state: State) -> str:
                 if row_range[0] >= row_range[1]:
                     raise ValueError("row_range should have the first int lower than the second int")
                 if state not in (0, 1):
@@ -550,6 +598,8 @@ class ASCII:
 
             @staticmethod
             def gain(row: int, col: int, value: float) -> str:
+                _validate_channel_number(row)
+                _validate_channel_number(col)
                 value = round(value, 2)
                 return f"set:mixer#gain#{row}#{col}#{value}"
 

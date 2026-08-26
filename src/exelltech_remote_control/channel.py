@@ -1,7 +1,5 @@
-from abc import ABC
-
-from modules.abstract import Channel
-from typing import Literal
+from .abstract import Channel
+from .enums import ChannelSource
 
 
 class InputChannel(Channel):
@@ -15,17 +13,17 @@ class InputChannel(Channel):
 
         self._number = number
         self._is_digital: bool = is_digital
-        self._name = f'IN{number + 1}'
+        self._name = f"IN{number + 1}"
         self._mute = False
         self._phantom_power = False
         self._gain = 0.0
         self._link = False
         self._level = self.MIN_LEVEL
         self._sensitivity: int = 0
-        self._source: Literal["input", "generator"] = "input"
+        self._source: ChannelSource = ChannelSource.INPUT
         self._phase: bool = False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"InputChannel(number={self._number:02}, "
             f"is_digital={self._is_digital}, "
@@ -41,16 +39,17 @@ class InputChannel(Channel):
         )
 
     @property
-    def source(self) -> str:
+    def source(self) -> ChannelSource:
         return self._source
 
     @source.setter
     def source(self, value: str) -> None:
         if not isinstance(value, str):
             raise ValueError("Source must be a string.")
-        if value not in ["input", "generator"]:
-            raise ValueError("Source can only be 'input' or 'generator'.")
-        self._source = value
+        try:
+            self._source = ChannelSource(value)
+        except ValueError:
+            raise ValueError("Source can only be 'input' or 'generator'.") from None
 
     @property
     def is_digital(self) -> bool:
@@ -101,12 +100,16 @@ class InputChannel(Channel):
         return self._level
 
     @level.setter
-    def level(self, value):
+    def level(self, value: float) -> None:
         self._level = value
 
 
 class OutputChannel(Channel):
-    def __init__(self, number: int, is_digital: bool = False, ) -> None:
+    def __init__(
+        self,
+        number: int,
+        is_digital: bool = False,
+    ) -> None:
         if not isinstance(number, int):
             raise ValueError("Number must be an integer.")
         if not 0 <= number <= 63:
@@ -115,7 +118,7 @@ class OutputChannel(Channel):
             raise ValueError("is_digital parameter must be a boolean")
 
         self._number = number
-        self._name = f'OUT{number + 1}'
+        self._name = f"OUT{number + 1}"
         self._is_digital: bool = is_digital
         self._mute = False
         self._gain = 0.0
@@ -123,9 +126,9 @@ class OutputChannel(Channel):
         self._level = self.MIN_LEVEL
         self._phase: bool = False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
-            f"InputChannel(number={self._number:02}, "
+            f"OutputChannel(number={self._number:02}, "
             f"is_digital={self._is_digital}, "
             f"name='{self._name}', "
             f"mute={self._mute}, "
@@ -154,5 +157,5 @@ class OutputChannel(Channel):
         return self._level
 
     @level.setter
-    def level(self, value):
+    def level(self, value: float) -> None:
         self._level = value

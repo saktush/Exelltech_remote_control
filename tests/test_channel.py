@@ -1,21 +1,21 @@
 import unittest
-from modules.channel import Channel, InputChannel, OutputChannel
+
+from exelltech_remote_control.channel import InputChannel, OutputChannel
 
 
 class TestInputChannel(unittest.TestCase):
-
     def setUp(self):
         self.input_channel = InputChannel(number=0, is_digital=False)
 
     def test_initialization(self):
         self.assertEqual(self.input_channel.number, 0)
-        self.assertEqual(self.input_channel.name, 'IN1')
+        self.assertEqual(self.input_channel.name, "IN1")
         self.assertFalse(self.input_channel.mute)
         self.assertEqual(self.input_channel.gain, 0.0)
         self.assertFalse(self.input_channel.link)
         self.assertEqual(self.input_channel.level, -160.0)
         self.assertFalse(self.input_channel.is_digital)
-        
+
     def test_name_setter(self):
         self.input_channel.name = "Test input_ch"
         self.assertEqual(self.input_channel.name, "Test input_ch")
@@ -23,8 +23,11 @@ class TestInputChannel(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.input_channel.name = 123  # Not a string
 
+        self.input_channel.name = "A" * 15  # Exactly at the 15-char limit
+        self.assertEqual(self.input_channel.name, "A" * 15)
+
         with self.assertRaises(ValueError):
-            self.input_channel.name = "A" * 17  # Length exceeds 16 chars
+            self.input_channel.name = "A" * 16  # Length exceeds 15 chars
 
         with self.assertRaises(ValueError):
             self.input_channel.name = "Chånnel"  # Non-ASCII character
@@ -93,20 +96,19 @@ class TestInputChannel(unittest.TestCase):
     def test_digital_channel_restrictions(self):
         digital_channel = InputChannel(number=1, is_digital=True)
         with self.assertRaises(AttributeError):
-            digital_channel.sensitivity
+            _ = digital_channel.sensitivity
 
         with self.assertRaises(AttributeError):
             digital_channel.phantom_power = True
 
 
 class TestOutputChannel(unittest.TestCase):
-
     def setUp(self):
         self.output_channel = OutputChannel(number=1, is_digital=False)
 
     def test_initialization(self):
         self.assertEqual(self.output_channel.number, 1)
-        self.assertEqual(self.output_channel.name, 'OUT2')
+        self.assertEqual(self.output_channel.name, "OUT2")
         self.assertFalse(self.output_channel.mute)
         self.assertEqual(self.output_channel.gain, 0.0)
         self.assertFalse(self.output_channel.link)
@@ -120,8 +122,11 @@ class TestOutputChannel(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.output_channel.name = 123  # Not a string
 
+        self.output_channel.name = "A" * 15  # Exactly at the 15-char limit
+        self.assertEqual(self.output_channel.name, "A" * 15)
+
         with self.assertRaises(ValueError):
-            self.output_channel.name = "A" * 17  # Length exceeds 16 chars
+            self.output_channel.name = "A" * 16  # Length exceeds 15 chars
 
         with self.assertRaises(ValueError):
             self.output_channel.name = "Chånnel"  # Non-ASCII character
@@ -160,6 +165,9 @@ class TestOutputChannel(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.output_channel.phase = "reversed"  # Not a boolean
 
+    def test_repr_identifies_as_output_channel(self):
+        self.assertTrue(repr(self.output_channel).startswith("OutputChannel("))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

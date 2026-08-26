@@ -1,9 +1,9 @@
 import unittest
-from modules.matrix import Matrix
+
+from exelltech_remote_control.matrix import Matrix
 
 
 class TestMatrix(unittest.TestCase):
-
     def setUp(self):
         self.matrix = Matrix(input_channels=4, output_channels=4)
 
@@ -20,7 +20,7 @@ class TestMatrix(unittest.TestCase):
             [True, False, False, True],
             [False, True, True, False],
             [True, True, False, False],
-            [False, False, True, True]
+            [False, False, True, True],
         ]
         self.matrix.routes = new_routes
         self.assertEqual(self.matrix.routes, new_routes)
@@ -30,7 +30,7 @@ class TestMatrix(unittest.TestCase):
             [-10.0, -20.0, -30.0, -40.0],
             [-50.0, -60.0, -70.0, -80.0],
             [0.0, -10.0, -20.0, -30.0],
-            [-40.0, -50.0, -60.0, -70.0]
+            [-40.0, -50.0, -60.0, -70.0],
         ]
         self.matrix.gains = new_gains
         self.assertEqual(self.matrix.gains, new_gains)
@@ -59,6 +59,12 @@ class TestMatrix(unittest.TestCase):
         result = str(self.matrix)
         self.assertIn("Matrix with 4 input channels and 4 output channels", result)
 
+    def test_str_representation_does_not_negate_gain_sign(self):
+        self.matrix.set_gain(row=0, col=0, value=-10.0)
+        result = str(self.matrix)
+        self.assertIn("Gain: -10.0 dB", result)
+        self.assertNotIn("Gain: 10.0 dB", result)
+
     def test_increase_all_gains(self):
         def increase_gains(matrix: Matrix, increment: float) -> None:
             new_gains = []
@@ -74,7 +80,7 @@ class TestMatrix(unittest.TestCase):
             [-10.0, -20.0, -30.0, -40.0],
             [-50.0, -60.0, -70.0, -80.0],
             [0.0, -10.0, -20.0, -30.0],
-            [-40.0, -50.0, -60.0, -70.0]
+            [-40.0, -50.0, -60.0, -70.0],
         ]
         self.matrix.gains = new_gains
 
@@ -84,10 +90,10 @@ class TestMatrix(unittest.TestCase):
             [-5.0, -15.0, -25.0, -35.0],
             [-45.0, -55.0, -65.0, -75.0],
             [0.0, -5.0, -15.0, -25.0],
-            [-35.0, -45.0, -55.0, -65.0]
+            [-35.0, -45.0, -55.0, -65.0],
         ]
         self.assertEqual(self.matrix.gains, expected_gains)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

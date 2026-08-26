@@ -1,6 +1,8 @@
 import ipaddress as ip
 from abc import ABC, abstractmethod
-from modules.matrix import Matrix
+from collections.abc import Sequence
+
+from .matrix import Matrix
 
 
 class Channel(ABC):
@@ -26,24 +28,28 @@ class Channel(ABC):
     Raises:
         ValueError: If an invalid value is passed when setting the name, mute, gain, or link properties.
     """
+
     MIN_GAIN = -72
     MAX_GAIN = 12
     MIN_LEVEL = -160
     MAX_LEVEL = 0
 
+    _number: int
+    _name: str
+    _mute: bool
+    _gain: float
+    _link: bool
+    _level: float
+
     @abstractmethod
-    def __init__(self) -> None:
-        self._number = ...
-        self._name = ...
-        self._mute = ...
-        self._gain = ...
-        self._link = ...
-        self._level: float = ...
+    def __init__(self) -> None: ...
 
     @abstractmethod
     def __repr__(self) -> str:
-        return (f"Channel {self.number}: {self.name} - Mute: {self.mute}, "
-                f"Gain: {self.gain}, Linked: {self.link}, Level: {self.level}")
+        return (
+            f"Channel {self.number}: {self.name} - Mute: {self.mute}, "
+            f"Gain: {self.gain}, Linked: {self.link}, Level: {self.level}"
+        )
 
     @property
     def number(self) -> int:
@@ -57,8 +63,8 @@ class Channel(ABC):
     def name(self, value: str) -> None:
         if not isinstance(value, str):
             raise ValueError("Name must be a string.")
-        if len(value) > 16:
-            raise ValueError("Name length cannot exceed 16 characters.")
+        if len(value) > 15:
+            raise ValueError("Name length cannot exceed 15 characters.")
         for char in value:
             if not char.isascii():
                 raise ValueError("Name can only contain ASCII letters and symbols.")
@@ -102,67 +108,64 @@ class Channel(ABC):
 
 
 class Processor(ABC):
+    _ip_addr: ip.IPv4Address
+    _port: int
+    _local_ip: ip.IPv4Address
+    _local_port: int
+    _system_mute: bool
+    _scenes: list[str]
+    _matrix: Matrix
 
     @abstractmethod
-    def __init__(self):
-        self._ip_addr: ip.IPv4Address = ...
-        self._port: int = ...
-        self._system_mute: bool = ...
-        self._scenes: list[str] = ...
-        self._input: list[Channel] = ...
-        self._output: list[Channel] = ...
-        self._matrix: Matrix = ...
+    def __init__(self) -> None: ...
 
     @abstractmethod
-    def __repr__(self):
-        pass
+    def __repr__(self) -> str: ...
 
     @property
     @abstractmethod
-    def ip_addr(self) -> ip.IPv4Address:
-        pass
+    def ip_addr(self) -> ip.IPv4Address: ...
 
     @ip_addr.setter
     @abstractmethod
-    def ip_addr(self, ip_addr: ip.IPv4Address):
-        pass
+    def ip_addr(self, ip_addr: ip.IPv4Address) -> None: ...
 
     @property
     @abstractmethod
-    def port(self) -> int:
-        pass
+    def port(self) -> int: ...
 
     @port.setter
     @abstractmethod
-    def port(self, port: int):
-        pass
+    def port(self, port: int) -> None: ...
 
     @property
     @abstractmethod
-    def system_mute(self) -> bool:
-        pass
+    def local_ip(self) -> ip.IPv4Address: ...
+
+    @property
+    @abstractmethod
+    def local_port(self) -> int: ...
+
+    @property
+    @abstractmethod
+    def system_mute(self) -> bool: ...
 
     @system_mute.setter
     @abstractmethod
-    def system_mute(self, mute: bool):
-        pass
+    def system_mute(self, mute: bool) -> None: ...
 
     @property
     @abstractmethod
-    def scenes(self) -> list[str]:
-        pass
+    def scenes(self) -> list[str]: ...
 
     @property
     @abstractmethod
-    def input_channels(self) -> list[Channel]:
-        pass
+    def input_channels(self) -> Sequence[Channel]: ...
 
     @property
     @abstractmethod
-    def output_channels(self) -> list[Channel]:
-        pass
+    def output_channels(self) -> Sequence[Channel]: ...
 
     @property
     @abstractmethod
-    def matrix(self) -> Matrix:
-        pass
+    def matrix(self) -> Matrix: ...

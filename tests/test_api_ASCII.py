@@ -1,5 +1,7 @@
-from modules.api import ASCII
 import unittest
+
+from exelltech_remote_control.api import ASCII
+from exelltech_remote_control.enums import SwitchState
 
 
 class TestASCIIMethods(unittest.TestCase):
@@ -260,6 +262,34 @@ class TestASCIIMethods(unittest.TestCase):
 
     def test_set_refactory(self):
         self.assertEqual(ASCII.set.refactory(), "set:refactory")
+
+    # lower-bound validation regression tests
+    def test_get_input_gain_rejects_negative_number(self):
+        with self.assertRaises(ValueError):
+            ASCII.get.input.gain(-1)
+
+    def test_get_output_mute_rejects_negative_number(self):
+        with self.assertRaises(ValueError):
+            ASCII.get.output.mute(-1)
+
+    def test_get_mixer_switch_rejects_negative_row(self):
+        with self.assertRaises(ValueError):
+            ASCII.get.mixer.switch(-1, 0)
+
+    def test_set_input_gain_rejects_negative_number(self):
+        with self.assertRaises(ValueError):
+            ASCII.set.input.gain(-1, 0.0)
+
+    def test_get_scene_name_rejects_out_of_range_number(self):
+        with self.assertRaises(ValueError):
+            ASCII.get.scene.name(-1)
+        with self.assertRaises(ValueError):
+            ASCII.get.scene.name(16)
+
+    # SwitchState enum accepted alongside plain 0/1
+    def test_set_mixer_switch_accepts_switch_state_enum(self):
+        self.assertEqual(ASCII.set.mixer.switch(1, 2, SwitchState.ON), "set:mixer#switch#1#2#1")
+        self.assertEqual(ASCII.set.mixer.switch(1, 2, SwitchState.OFF), "set:mixer#switch#1#2#0")
 
 
 if __name__ == "__main__":

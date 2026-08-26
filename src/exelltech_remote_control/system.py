@@ -1,6 +1,5 @@
-import socket
 import ipaddress as ip
-from typing import Union
+import socket
 
 
 def bytes_to_hex(b_string: bytes) -> str:
@@ -8,7 +7,7 @@ def bytes_to_hex(b_string: bytes) -> str:
 
 
 def bytes_to_ascii(b_string: bytes) -> str:
-    return b_string.decode('ascii')
+    return b_string.decode("ascii")
 
 
 def ascii_to_bytes(message: str) -> bytes:
@@ -19,13 +18,13 @@ def hex_to_bytes(message: str) -> bytes:
     return bytes.fromhex(message)
 
 
-def ping_server(server: str, port: int, timeout=3):
+def ping_server(server: str, port: int, timeout: int = 3) -> bool:
     """ping server"""
     try:
         socket.setdefaulttimeout(timeout)
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((server, port))
-    except OSError as error:
+    except OSError:
         return False
     else:
         s.close()
@@ -42,13 +41,14 @@ class UDP:
     - param BUFFERSIZE: int
 
     """
+
     TIMEOUT: float = 0.25
     BUFFERSIZE: int = 256
 
     @staticmethod
-    def send(source_ip: Union[ip.IPv4Address, str], source_port: int,
-             dest_ip: Union[ip.IPv4Address, str], dest_port: int,
-             message: str) -> Union[str, None]:
+    def send(
+        source_ip: ip.IPv4Address | str, source_port: int, dest_ip: ip.IPv4Address | str, dest_port: int, message: str
+    ) -> str | None:
         """
         Sends a UDP message from the specified source to the destination. Handles conversion
         of message to bytes and automatically closes the socket after the operation.
@@ -75,7 +75,7 @@ class UDP:
             ip.ip_address(source_ip)
             ip.ip_address(dest_ip)
         except ValueError as e:
-            raise ValueError(f"Invalid IP address: {e}")
+            raise ValueError(f"Invalid IP address: {e}") from e
 
         if not isinstance(source_port, int) or not isinstance(dest_port, int):
             raise ValueError("Ports should be integers")
@@ -83,7 +83,7 @@ class UDP:
         try:
             message_bytes = ascii_to_bytes(message)
         except UnicodeEncodeError as e:
-            raise ValueError(f"Message encoding failed: {e}")
+            raise ValueError(f"Message encoding failed: {e}") from e
 
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             try:
@@ -93,9 +93,9 @@ class UDP:
                 try:
                     response = sock.recv(UDP.BUFFERSIZE)
                     return bytes_to_ascii(response)
-                except socket.timeout:
+                except TimeoutError:
                     return None
-            except socket.error as e:
-                raise RuntimeError(f"Socket operation failed: {e}")
+            except OSError as e:
+                raise RuntimeError(f"Socket operation failed: {e}") from e
 
         return None

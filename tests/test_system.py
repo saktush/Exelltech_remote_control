@@ -1,21 +1,21 @@
+import ipaddress as ip
 import socket
 import unittest
-from unittest.mock import patch, MagicMock
-from modules.system import UDP
-import ipaddress as ip
+from unittest.mock import MagicMock, patch
+
+from exelltech_remote_control.system import UDP
 
 
 class TestUDP(unittest.TestCase):
-
     def setUp(self):
-        self.local_ip = ip.ip_address("192.168.3.100")
+        self.local_ip = ip.ip_address("192.168.1.100")
         self.local_port = 50000
-        self.dest_ip = ip.ip_address("192.168.3.110")
+        self.dest_ip = ip.ip_address("192.168.1.110")
         self.dest_port = 50000
         self.speed = 0.01
         self.message = "Hello, World!"
 
-    @patch('socket.socket')
+    @patch("socket.socket")
     def test_send_success(self, mock_socket):
         # Create a mock socket object
         mock_sock_instance = MagicMock()
@@ -33,7 +33,7 @@ class TestUDP(unittest.TestCase):
         mock_sock_instance.sendto.assert_called_with(self.message.encode("ascii"), (str(self.dest_ip), self.dest_port))
         mock_sock_instance.recv.assert_called_once_with(UDP.BUFFERSIZE)
 
-    @patch('socket.socket')
+    @patch("socket.socket")
     def test_send_timeout(self, mock_socket):
         # Create a mock socket object
         mock_sock_instance = MagicMock()
@@ -51,7 +51,7 @@ class TestUDP(unittest.TestCase):
         mock_sock_instance.sendto.assert_called_with(self.message.encode("ascii"), (str(self.dest_ip), self.dest_port))
         mock_sock_instance.recv.assert_called_once_with(UDP.BUFFERSIZE)
 
-    @patch('socket.socket')
+    @patch("socket.socket")
     def test_send_invalid_ip(self, mock_socket):
         with self.assertRaises(ValueError):
             UDP.send("invalid_ip", self.local_port, self.dest_ip, self.dest_port, self.message)
@@ -60,6 +60,5 @@ class TestUDP(unittest.TestCase):
             UDP.send(self.local_ip, self.local_port, "invalid_ip", self.dest_port, self.message)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-
